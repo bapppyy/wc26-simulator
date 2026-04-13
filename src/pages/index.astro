@@ -1,64 +1,429 @@
 ---
-import '../styles/global.css';
-import AppHeader from '../components/AppHeader.astro';
-import Navigation from '../components/Navigation.astro';
-import SimControls from '../components/SimControls.astro';
-import MontePanel from '../components/panels/MontePanel.astro';
-import GroupsPanel from '../components/panels/GroupsPanel.astro';
-import FixturePanel from '../components/panels/FixturePanel.astro';
-import BracketPanel from '../components/panels/BracketPanel.astro';
-import BrowserPanel from '../components/panels/BrowserPanel.astro';
-import JourneyPanel from '../components/panels/JourneyPanel.astro';
-import SquadsPanel from '../components/panels/SquadsPanel.astro';
-import PowerPanel from '../components/panels/PowerPanel.astro';
-import VotePanel from '../components/panels/VotePanel.astro';
-import OnboardingModal from '../components/modals/OnboardingModal.astro';
-import MatchModal from '../components/modals/MatchModal.astro';
+import '../styles/lab.css';
 ---
 
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
-    <title>2026 FIFA World Cup Simulator — v4.2</title>
-  </head>
-  <body>
-    <OnboardingModal />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-    <div class="shell">
-      <AppHeader />
-      <Navigation />
-      <SimControls />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" href="/favicon.ico" />
 
-      <MontePanel />
-      <GroupsPanel />
-      <FixturePanel />
-      <BracketPanel />
-      <BrowserPanel />
-      <JourneyPanel />
-      <SquadsPanel />
-      <PowerPanel />
-      <VotePanel />
+  <meta name="generator" content={Astro.generator} />
+
+  <!-- Primary SEO -->
+  <title>BapLab | 2026 World Cup Simulator &amp; AI Analysis Lab</title>
+  <meta name="description" content="Experience the most advanced 2026 FIFA World Cup Simulator. Explore probabilistic forecasts, AI-driven data analysis, and interactive simulations at BapLab." />
+  <meta name="keywords" content="2026 FIFA World Cup simulator, WC2026, football simulation, Monte Carlo, AI sports analysis, probabilistic forecast, BapLab" />
+  <link rel="canonical" href="https://baplab.net/" />
+
+  <!-- OpenGraph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://baplab.net/" />
+  <meta property="og:site_name"   content="BapLab" />
+  <meta property="og:title"       content="BapLab | 2026 World Cup Simulator &amp; AI Analysis Lab" />
+  <meta property="og:description" content="Experience the most advanced 2026 FIFA World Cup Simulator. Explore probabilistic forecasts, AI-driven data analysis, and interactive simulations at BapLab." />
+  <meta property="og:image"       content="https://baplab.net/og-image.png" />
+  <meta property="og:image:alt"   content="BapLab — WC 2026 Simulator interface showing tournament probabilities" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="BapLab | 2026 World Cup Simulator" />
+  <meta name="twitter:description" content="The most advanced FIFA WC 2026 simulator. 48 teams, 1,104 players, probabilistic forecasts." />
+  <meta name="twitter:image"       content="https://baplab.net/og-image.png" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BapLab WC 2026 Simulator",
+    "url": "https://baplab.net/simulator/",
+    "applicationCategory": "SportsApplication",
+    "operatingSystem": "Web",
+    "description": "Advanced Monte Carlo simulator for the 2026 FIFA World Cup. Covers 48 teams, 1,104 real players, Annex C bracket logic, and full match event generation.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "BapLab",
+      "url": "https://baplab.net"
+    },
+    "featureList": [
+      "Monte Carlo tournament simulation",
+      "48-team bracket with Annex C logic",
+      "1,104 real player ratings",
+      "Full match event generation",
+      "Probabilistic championship forecasts"
+    ]
+  })}></script>
+
+  <!-- WebSite schema for sitelinks searchbox -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "BapLab",
+    "url": "https://baplab.net"
+  })}></script>
+
+  <style>
+    /* ── Bento grid ──────────────────────────────────────────── */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 12px;
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Cell base */
+    .cell {
+      background: var(--color-card);
+      border: 1px solid var(--color-line);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .cell:hover {
+      border-color: rgba(0,255,65,.25);
+      box-shadow: 0 0 20px rgba(0,255,65,.05);
+    }
+    .cell a { text-decoration: none; color: inherit; }
+
+    /* Simulator — hero tile */
+    .cell-sim {
+      grid-column: 1 / 3;
+      grid-row: 1 / 3;
+      background: linear-gradient(135deg, #0d150d 0%, #111c11 60%, #0a130a 100%);
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Patreon */
+    .cell-patreon {
+      background: linear-gradient(135deg, #130d0a 0%, #1c1108 100%);
+      border-color: #2a1a0a;
+    }
+    .cell-patreon:hover {
+      border-color: rgba(255,150,50,.35);
+      box-shadow: 0 0 20px rgba(255,150,50,.06);
+    }
+
+    /* AI / Automation / Data — placeholder cards */
+    .cell-placeholder {
+      background: var(--color-card-2);
+      min-height: 130px;
+    }
+
+    /* Blog */
+    .cell-blog {
+      grid-column: 1 / -1;
+    }
+
+    /* ── Typography helpers ──────────────────────────────────── */
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .tag-green  { background: rgba(0,255,65,.12); color: #00ff41; border: 1px solid rgba(0,255,65,.2); }
+    .tag-orange { background: rgba(255,150,50,.12); color: #ff9632; border: 1px solid rgba(255,150,50,.2); }
+    .tag-blue   { background: rgba(100,160,255,.12); color: #80b3ff; border: 1px solid rgba(100,160,255,.2); }
+    .tag-purple { background: rgba(180,100,255,.12); color: #c084fc; border: 1px solid rgba(180,100,255,.2); }
+    .tag-pink   { background: rgba(255,100,160,.12); color: #f472b6; border: 1px solid rgba(255,100,160,.2); }
+
+    .cell-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f0f7f0;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .cell-desc {
+      font-size: 13px;
+      color: var(--color-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      cursor: pointer;
+      transition: all .15s;
+      text-decoration: none;
+    }
+    .cta-green {
+      background: #00ff41;
+      color: #050c05;
+    }
+    .cta-green:hover {
+      background: #00cc33;
+      box-shadow: 0 0 16px rgba(0,255,65,.3);
+    }
+    .cta-orange {
+      background: #ff9632;
+      color: #0c0600;
+    }
+    .cta-orange:hover {
+      background: #ffaa55;
+      box-shadow: 0 0 16px rgba(255,150,50,.3);
+    }
+    .cta-ghost {
+      background: transparent;
+      color: var(--color-muted);
+      border: 1px solid var(--color-line);
+    }
+    .cta-ghost:hover {
+      color: var(--color-text);
+      border-color: rgba(0,255,65,.3);
+    }
+
+    /* Stats strip inside sim card */
+    .stats-strip {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .stat { font-size: 11px; color: var(--color-muted); }
+    .stat b { color: #00ff41; font-weight: 700; font-size: 13px; display: block; }
+
+    /* Waveform decoration on sim card */
+    .waveform {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 200px; height: 90px;
+      opacity: .06;
+      pointer-events: none;
+    }
+
+    /* Patreon supporters text */
+    .patron-tagline {
+      font-size: 12px;
+      color: #7a5a3a;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* Coming-soon badge */
+    .soon {
+      position: absolute;
+      top: 14px; right: 14px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(255,255,255,.05);
+      color: #555;
+      border: 1px solid #222;
+    }
+
+    /* ── Responsive breakpoints ──────────────────────────────── */
+    @media (max-width: 800px) {
+      .bento { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 12px; }
+      .cell-sim { grid-column: 1 / -1; grid-row: auto; min-height: 280px; }
+      .cell-blog { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 520px) {
+      .bento { grid-template-columns: 1fr; gap: 8px; padding: 10px; }
+      .cell-patreon, .cell-placeholder { grid-column: auto; }
+      .cell-blog { grid-column: auto; }
+      .cell-sim { min-height: 240px; }
+      .cell-title { font-size: 17px; }
+    }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    .lab-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--color-line);
+    }
+    .lab-logo {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      color: #f0f7f0;
+    }
+    .lab-logo span { color: #00ff41; }
+    .lab-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .lab-nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-muted);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .lab-nav-links a:hover { color: #00ff41; }
+    .lab-nav-links a.active { color: #f0f7f0; }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    .lab-footer {
+      text-align: center;
+      padding: 28px 16px 36px;
+      font-size: 11px;
+      color: #2a3a2a;
+      border-top: 1px solid var(--color-line);
+      margin-top: 8px;
+    }
+    .lab-footer a { color: #3a5a3a; text-decoration: none; }
+    .lab-footer a:hover { color: var(--color-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <nav class="lab-nav">
+    <div class="lab-logo">Bap<span>Lab</span></div>
+    <div class="lab-nav-links">
+      <a href="/" class="active">Home</a>
+      <a href="/simulator/">Simulator</a>
+      <a href="/blog/">Blog</a>
+      <a href="https://www.patreon.com/c/BapLab" target="_blank" rel="noopener noreferrer" style="color:#ff9632">Patreon</a>
     </div>
+  </nav>
 
-    <MatchModal />
+  <!-- ── Bento Grid ──────────────────────────────────────── -->
+  <main class="bento">
 
-    <footer style="text-align:center;padding:22px 0 32px;font-size:12px;color:#bbb;border-top:1px solid #eee;margin-top:12px;line-height:2">
-      <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:6px">
-        <a href="/blog/" style="color:#555;text-decoration:none;font-weight:500">Blog</a>
-        <a href="mailto:bplt92@gmail.com" style="color:#555;text-decoration:none;font-weight:500;display:inline-flex;align-items:center;gap:4px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          bplt92@gmail.com
+    <!-- 1. Featured: WC 2026 Simulator (large, col 1-2, row 1-2) -->
+    <article class="cell cell-sim glow-box" aria-label="WC 2026 Simulator">
+      <div>
+        <span class="tag tag-green">⚽ Featured</span>
+        <h1 class="cell-title" style="font-size:26px">
+          2026 FIFA World Cup<br />
+          <span style="color:#00ff41" class="glow">Simulator</span>
+        </h1>
+        <p class="cell-desc">
+          The most advanced probabilistic FIFA WC 2026 simulator.<br />
+          Monte Carlo engine · 48 teams · 1,104 real players · Annex&nbsp;C bracket logic · Full match reports every sim.
+        </p>
+
+        <div class="stats-strip">
+          <div class="stat"><b>48</b>Teams</div>
+          <div class="stat"><b>1,104</b>Players</div>
+          <div class="stat"><b>495</b>Scenarios</div>
+          <div class="stat"><b>104</b>Matches/sim</div>
+        </div>
+
+        <a href="/simulator/" class="cta-btn cta-green" aria-label="Launch the WC 2026 Simulator">
+          Launch Simulator
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
-      <span style="color:#ccc">WC 2026 Simulator &mdash; Not affiliated with FIFA</span>
-    </footer>
 
-    <script>
-      import '../scripts/main.js';
-    </script>
-  </body>
+      <!-- decorative waveform -->
+      <svg class="waveform" viewBox="0 0 200 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polyline points="0,45 10,20 20,60 30,30 40,55 50,15 60,50 70,35 80,65 90,25 100,50 110,40 120,60 130,20 140,55 150,30 160,50 170,10 180,45 190,35 200,45" stroke="#00ff41" stroke-width="2" fill="none"/>
+      </svg>
+    </article>
+
+    <!-- 2. Patreon CTA -->
+    <article class="cell cell-patreon glow-box-hover" aria-label="Support BapLab on Patreon">
+      <span class="tag tag-orange">❤️ Support</span>
+      <h2 class="cell-title" style="font-size:16px">Support the Lab</h2>
+      <p class="cell-desc patron-tagline">
+        Help us keep the simulations running — and unlock early access to new tools.
+      </p>
+      <a
+        href="https://www.patreon.com/c/BapLab"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="cta-btn cta-orange"
+        aria-label="Support BapLab on Patreon"
+      >
+        Become a Patron
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </article>
+
+    <!-- 3. AI Experiments -->
+    <article class="cell cell-placeholder glow-box-hover" aria-label="AI Experiments — coming soon">
+      <span class="soon">Coming Soon</span>
+      <span class="tag tag-blue">🤖 AI</span>
+      <h2 class="cell-title" style="font-size:16px">AI Experiments</h2>
+      <p class="cell-desc">Generative models, LLM pipelines, and machine-learning experiments applied to sports data.</p>
+    </article>
+
+    <!-- 4. Automation Lab -->
+    <article class="cell cell-placeholder glow-box-hover" aria-label="Automation Lab — coming soon">
+      <span class="soon">Coming Soon</span>
+      <span class="tag tag-purple">⚙️ Automation</span>
+      <h2 class="cell-title" style="font-size:16px">Automation Lab</h2>
+      <p class="cell-desc">Workflow automation tools, scrapers, and data pipeline prototypes.</p>
+    </article>
+
+    <!-- 5. Data Stories -->
+    <article class="cell cell-placeholder glow-box-hover" aria-label="Data Stories — coming soon">
+      <span class="soon">Coming Soon</span>
+      <span class="tag tag-pink">📊 Data</span>
+      <h2 class="cell-title" style="font-size:16px">Data Stories</h2>
+      <p class="cell-desc">Interactive visualisations and deep dives into football statistics and simulation outputs.</p>
+    </article>
+
+    <!-- 6. Blog — full-width bottom strip -->
+    <article class="cell cell-blog" style="padding:20px 24px" aria-label="BapLab Blog">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <span class="tag tag-green">✍️ Blog</span>
+          <h2 class="cell-title" style="font-size:15px;margin-bottom:4px">Latest from the Lab</h2>
+          <p class="cell-desc" style="font-size:12px">Analysis, guides, and updates on simulations, AI experiments, and data science.</p>
+        </div>
+        <a href="/blog/" class="cta-btn cta-ghost" aria-label="Read the BapLab blog">
+          Read Blog
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────────────── -->
+  <footer class="lab-footer">
+    <div style="margin-bottom:6px">
+      <a href="/">BapLab</a> ·
+      <a href="/simulator/">Simulator</a> ·
+      <a href="/blog/">Blog</a> ·
+      <a href="https://www.patreon.com/c/BapLab" target="_blank" rel="noopener noreferrer">Patreon</a> ·
+      <a href="mailto:bplt92@gmail.com">bplt92@gmail.com</a>
+    </div>
+    <div>© 2026 BapLab — Not affiliated with FIFA</div>
+  </footer>
+
+</body>
 </html>

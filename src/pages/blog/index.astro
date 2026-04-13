@@ -14,8 +14,17 @@ const posts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Blog — WC 2026 Simulator</title>
+    <title>Blog — BapLab</title>
+    <meta name="description" content="Analysis, guides, and updates from BapLab — covering football simulations, AI experiments, and data science." />
+    <link rel="canonical" href="https://baplab.net/blog/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://baplab.net/blog/" />
+    <meta property="og:title" content="Blog — BapLab" />
+    <meta property="og:description" content="Analysis, guides, and updates from BapLab — covering football simulations, AI experiments, and data science." />
+    <meta property="og:image" content="https://baplab.net/og-image.png" />
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafaf8; color: #1a1a1a; line-height: 1.6; }
@@ -35,8 +44,8 @@ const posts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.
   </head>
   <body>
     <div class="wrap">
-      <a class="back" href="/">← Back to Simulator</a>
-      <h1>WC 2026 Simulator Blog</h1>
+      <a class="back" href="/">← BapLab</a>
+      <h1>BapLab Blog</h1>
       <div class="subt">Analysis, guides, and updates</div>
 
       {posts.length === 0

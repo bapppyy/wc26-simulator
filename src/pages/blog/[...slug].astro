@@ -18,9 +18,17 @@ const { Content } = await render(post);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{post.data.title} — WC 2026 Simulator</title>
+    <title>{post.data.title} — BapLab</title>
     <meta name="description" content={post.data.description} />
+    <link rel="canonical" href={`https://baplab.net/blog/${post.id}/`} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={`https://baplab.net/blog/${post.id}/`} />
+    <meta property="og:title" content={`${post.data.title} — BapLab`} />
+    <meta property="og:description" content={post.data.description} />
+    <meta property="og:image" content="https://baplab.net/og-image.png" />
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafaf8; color: #1a1a1a; line-height: 1.7; }
@@ -43,7 +51,8 @@ const { Content } = await render(post);
   </head>
   <body>
     <div class="wrap">
-      <a class="back" href="/blog/">← All posts</a>
+      <a class="back" href="/">← BapLab</a>
+      <a class="back" href="/blog/" style="margin-left:12px">All posts</a>
       <div class="meta">
         {post.data.type} · {post.data.pubDate.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })}
       </div>
