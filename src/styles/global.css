@@ -199,7 +199,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .vote-submit:hover{background:#f0f0ee}
 .vote-submitted{background:#dcfce7;border-color:#86efac;color:#166534}
 /* Onboarding */
-.ob-bg{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:rgba(15,15,15,.65);backdrop-filter:blur(5px)}
+.ob-bg{position:fixed;inset:0;z-index:999;display:none;align-items:center;justify-content:center;background:rgba(15,15,15,.65);backdrop-filter:blur(5px)}
 .ob-modal{background:#fff;border-radius:16px;width:min(95vw,680px);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
 .ob-hdr{padding:22px 24px 14px;border-bottom:1px solid #e5e5e0;flex-shrink:0}
 .ob-title{font-size:22px;font-weight:800;margin-bottom:5px;letter-spacing:-.02em}
@@ -235,8 +235,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hl-mc{background:#e8f6ff !important;border-color:#00c4ff !important}
 .hl-bm{background:#e8f6ff !important;border-color:#00c4ff !important}
 .hl-bt{font-weight:700;color:#005580 !important}
-/* Round SVG flags from country-flag-icons */
-.flag-svg{display:inline-flex;width:20px;height:20px;border-radius:50%;overflow:hidden;flex-shrink:0;vertical-align:middle;align-items:center;justify-content:center}
-.flag-svg svg{width:30px !important;height:20px !important;flex-shrink:0;margin-left:-5px}
+/* Circle Flags CDN */
+.flag-ci{display:inline-block;width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;vertical-align:middle}
 .flag-em{display:inline;font-size:1em;line-height:1;vertical-align:middle}
 @media(max-width:600px){.ob-footer{flex-direction:column}.ob-rand,.ob-ok{width:100%;text-align:center}}

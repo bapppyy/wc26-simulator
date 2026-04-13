@@ -3,6 +3,8 @@
 
 import { DATA } from '../../lib/data.js';
 import { GKEYS } from '../../lib/constants.js';
+import { flagHtml } from '../../lib/flagSvg.js';
+import { tTeam } from '../../lib/i18n.js';
 
 export function drawVote() {
   const el = document.getElementById('voteEl');
@@ -31,9 +33,9 @@ export function drawVote() {
       const hdr = document.createElement('div');
       hdr.className = 'vote-card-hdr';
       const fl = document.createElement('span');
-      fl.className = 'vote-flag'; fl.textContent = d.f;
+      fl.className = 'vote-flag'; fl.innerHTML = flagHtml(name, d.f);
       const nm = document.createElement('span');
-      nm.className = 'vote-name'; nm.textContent = name;
+      nm.className = 'vote-name'; nm.textContent = tTeam(name);
       hdr.appendChild(fl); hdr.appendChild(nm);
       card.appendChild(hdr);
 

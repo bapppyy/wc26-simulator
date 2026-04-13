@@ -1,5 +1,6 @@
 import { flag } from '../../lib/engine.js';
 import { rerunDetailed } from '../../lib/engine.js';
+import { tTeam } from '../../lib/i18n.js';
 import { state } from '../state.js';
 import { ui, defaultLang } from '../../i18n/ui';
 
@@ -32,7 +33,7 @@ export function openMatchModal(m, rnd, simIdx) {
 
   function xiHtml(xi, tname) {
     if (!xi || !xi.length)
-      return `<div class="xic"><div class="xict">${flag(tname)} ${tname}</div><div style="font-size:12px;color:#aaa">No squad data</div></div>`;
+      return `<div class="xic"><div class="xict">${flag(tname)} ${tTeam(tname)}</div><div style="font-size:12px;color:#aaa">No squad data</div></div>`;
     const posOrder = [["1-GK","GK"],["2-DF","DF"],["3-MF","MF"],["4-FW","FW"]];
     let rows = "";
     for (const [posCode, cat] of posOrder) {
@@ -44,7 +45,7 @@ export function openMatchModal(m, rnd, simIdx) {
         rows += `<div class="xir"><span class="xip">${cat}</span>${star}<span class="xin">${p.n}</span>${g}${a}<span class="xiovr">${p.o}</span></div>`;
       }
     }
-    return `<div class="xic"><div class="xict">${flag(tname)} ${tname}</div>${rows}</div>`;
+    return `<div class="xic"><div class="xict">${flag(tname)} ${tTeam(tname)}</div>${rows}</div>`;
   }
 
   let evHtml = "";
@@ -80,9 +81,9 @@ export function openMatchModal(m, rnd, simIdx) {
     : "";
 
   document.getElementById("modalBody").innerHTML =
-    `<div class="mhero"><div class="mht"><div class="mhf">${flag(m.a)}</div><div class="mhn">${m.a}</div></div>`
+    `<div class="mhero"><div class="mht"><div class="mhf">${flag(m.a)}</div><div class="mhn">${tTeam(m.a)}</div></div>`
     + `<div><div class="mhsc">${m.sa}–${m.sb}</div><div class="mhsb">${sub || rnd || ""}</div>${fromSimBtn}</div>`
-    + `<div class="mht"><div class="mhf">${flag(m.b)}</div><div class="mhn">${m.b}</div></div></div>`
+    + `<div class="mht"><div class="mhf">${flag(m.b)}</div><div class="mhn">${tTeam(m.b)}</div></div></div>`
     + `<div class="sec">Starting XI</div><div class="xig">${xiHtml(_xiA, m.a)}${xiHtml(_xiB, m.b)}</div>`
     + `<div class="sec">Match Events (${(m.events || []).length} events)</div>`
     + `<div class="evl">${evHtml || `<div style="color:#aaa;font-size:12px;padding:8px 0">Full events are recorded for the last simulation. For older sims use Sim Browser → 📋 Report.</div>`}</div>`;
@@ -111,16 +112,16 @@ export function buildFullReportModal(s, idx) {
     ...s.fin.map(m => ({ ...m, round: "Final", roundFull: "Final" })),
   ].filter(Boolean);
 
-  let html = `<div style="font-size:12px;color:#888;margin-bottom:8px">${allMs.length} matches · Champion: ${flag(s.champion)}${s.champion} · Click match → detail</div>`;
+  let html = `<div style="font-size:12px;color:#888;margin-bottom:8px">${allMs.length} matches · Champion: ${flag(s.champion)}${tTeam(s.champion)} · Click match → detail</div>`;
   html += `<div style="display:flex;flex-direction:column;gap:3px;max-height:65vh;overflow-y:auto">`;
   for (const m of allMs) {
     const wA = m.w === m.a;
     const sub = m.pen ? " pen." + m.penA + "-" + m.penB : m.et ? " ET" : "";
     html += `<div onclick="openReportMatch(${idx},'${m.a}','${m.b}')" style="display:grid;grid-template-columns:48px 1fr 52px 1fr;gap:5px;align-items:center;padding:6px 10px;background:#f8f8f6;border-radius:7px;cursor:pointer;font-size:12px;margin-bottom:2px">`
       + `<span style="font-size:10px;color:#aaa;font-weight:600">${m.round}</span>`
-      + `<div style="font-weight:${wA ? 700 : 400};color:${wA ? "#1a1a1a" : "#bbb"}">${flag(m.a)}${m.a}</div>`
+      + `<div style="font-weight:${wA ? 700 : 400};color:${wA ? "#1a1a1a" : "#bbb"}">${flag(m.a)}${tTeam(m.a)}</div>`
       + `<div style="text-align:center;font-weight:700">${m.sa}–${m.sb}<span style="font-size:9px;color:#aaa;font-weight:400">${sub}</span></div>`
-      + `<div style="text-align:right;font-weight:${!wA ? 700 : 400};color:${!wA ? "#1a1a1a" : "#bbb"}">${m.b}${flag(m.b)}</div></div>`;
+      + `<div style="text-align:right;font-weight:${!wA ? 700 : 400};color:${!wA ? "#1a1a1a" : "#bbb"}">${tTeam(m.b)}${flag(m.b)}</div></div>`;
   }
   html += `</div>`;
   document.getElementById("modalTitle").textContent = `📋 Sim #${idx} — Select Match`;

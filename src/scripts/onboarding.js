@@ -4,6 +4,8 @@
 
 import { DATA } from '../lib/data.js';
 import { GKEYS } from '../lib/constants.js';
+import { flagHtml } from '../lib/flagSvg.js';
+import { tTeam } from '../lib/i18n.js';
 
 let obTeam    = null;   // confirmed team
 let obPending = null;   // pending in picker
@@ -16,51 +18,51 @@ export function obHighlight() {
   if (!obTeam) return;
   const ut = obTeam;
 
-  // Stage table rows
+  // Stage table rows — match via data-team attribute
   document.querySelectorAll('#stageBody tr').forEach(tr => {
-    const el = tr.querySelector('.tcl');
-    tr.classList.toggle('hl-row', !!(el && el.textContent.indexOf(ut) >= 0));
+    const el = tr.querySelector('.tcl[data-team]');
+    tr.classList.toggle('hl-row', !!(el && el.getAttribute('data-team') === ut));
   });
 
-  // Power table rows
+  // Power table rows — match via data-team attribute
   document.querySelectorAll('#pwBody tr').forEach(tr => {
-    const el = tr.querySelector('.pw-team-name');
-    tr.classList.toggle('hl-row', !!(el && el.textContent.trim() === ut));
+    const el = tr.querySelector('.pw-team-name[data-team]');
+    tr.classList.toggle('hl-row', !!(el && el.getAttribute('data-team') === ut));
   });
 
-  // Groups panel
+  // Groups panel — match via data-team attribute
   document.querySelectorAll('.gr').forEach(div => {
-    const el = div.querySelector('.gtm span:last-child');
-    div.classList.toggle('hl-gr', !!(el && el.textContent.trim() === ut));
+    const el = div.querySelector('.gtm span[data-team]');
+    div.classList.toggle('hl-gr', !!(el && el.getAttribute('data-team') === ut));
   });
 
-  // Fixture panel match cards
+  // Fixture panel match cards — match via data-team attribute
   document.querySelectorAll('.mc').forEach(card => {
     let found = false;
-    card.querySelectorAll('.mta span:last-child,.mtb span:first-child').forEach(s => {
-      if (s.textContent.trim() === ut) found = true;
+    card.querySelectorAll('[data-team]').forEach(s => {
+      if (s.getAttribute('data-team') === ut) found = true;
     });
     card.classList.toggle('hl-mc', found);
   });
 
-  // Bracket boxes
+  // Bracket boxes — match via data-team attribute
   document.querySelectorAll('.bm').forEach(bm => {
     let found = false;
-    bm.querySelectorAll('.bt').forEach(bt => {
-      if (bt.textContent.replace(/\d+/g, '').trim().indexOf(ut) >= 0) found = true;
+    bm.querySelectorAll('.bt[data-team]').forEach(bt => {
+      if (bt.getAttribute('data-team') === ut) found = true;
     });
     bm.classList.toggle('hl-bm', found);
-    bm.querySelectorAll('.bt').forEach(bt => {
-      bt.classList.toggle('hl-bt', bt.textContent.replace(/\d+/g, '').trim().indexOf(ut) >= 0);
+    bm.querySelectorAll('.bt[data-team]').forEach(bt => {
+      bt.classList.toggle('hl-bt', bt.getAttribute('data-team') === ut);
     });
   });
 
-  // Monte Carlo cards
+  // Monte Carlo cards — match via data-team attribute
   document.querySelectorAll('.mci').forEach(card => {
-    const el = card.querySelector('.mcn');
-    const match = !!(el && el.textContent.trim() === ut);
-    card.style.outline   = match ? '2px solid #f59e0b' : '';
-    card.style.background = match ? '#fffbeb' : '';
+    const el = card.querySelector('.mcn[data-team]');
+    const match = !!(el && el.getAttribute('data-team') === ut);
+    card.style.outline   = match ? '2px solid #00c4ff' : '';
+    card.style.background = match ? '#e8f6ff' : '';
   });
 }
 
@@ -93,8 +95,8 @@ export function obBuild(filter) {
       row.className = 'ob-row' + (name === obPending ? ' sel' : '');
       row.setAttribute('data-n', name);
 
-      const flagEl = document.createElement('span'); flagEl.className = 'ob-rflag'; flagEl.textContent = d.f;
-      const nameEl = document.createElement('span'); nameEl.className = 'ob-rname'; nameEl.textContent = name;
+      const flagEl = document.createElement('span'); flagEl.className = 'ob-rflag'; flagEl.innerHTML = flagHtml(name, d.f);
+      const nameEl = document.createElement('span'); nameEl.className = 'ob-rname'; nameEl.textContent = tTeam(name);
       const ovrEl  = document.createElement('span'); ovrEl.className  = 'ob-rovr';  ovrEl.textContent  = 'OVR ' + d.ovr;
       row.appendChild(flagEl); row.appendChild(nameEl); row.appendChild(ovrEl);
       list.appendChild(row);
@@ -143,6 +145,7 @@ export function obOpen() {
 export function obConfirm() {
   if (!obPending) return;
   obTeam = obPending;
+  localStorage.setItem('wc26_team', obTeam);
   const bg = document.getElementById('obBg');
   if (bg) bg.style.display = 'none';
 
@@ -151,7 +154,7 @@ export function obConfirm() {
     const badge = document.getElementById('obBadge');
     if (badge) badge.style.display = 'flex';
     const fl = document.getElementById('obBadgeFlag');
-    if (fl) fl.textContent = d.f;
+    if (fl) fl.innerHTML = flagHtml(obTeam, d.f);
     const nm = document.getElementById('obBadgeName');
     if (nm) nm.textContent = obTeam;
   }
@@ -212,4 +215,15 @@ export function initOnboarding() {
 
   // Pre-populate the list
   obBuild('');
+
+  // Show modal only on first visit; restore silently on return visits
+  const saved = localStorage.getItem('wc26_team');
+  if (saved && DATA[saved]) {
+    // Return visit — apply selection without ever showing the modal
+    obPending = saved;
+    obConfirm();
+  } else {
+    // First visit — show the picker
+    obOpen();
+  }
 }

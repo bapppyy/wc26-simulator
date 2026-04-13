@@ -4,6 +4,7 @@
 import { allTeams, flag } from '../../lib/engine.js';
 import { DATA, DATA_ORIG } from '../../lib/data.js';
 import { state, advPct, pBar } from '../state.js';
+import { tTeam } from '../../lib/i18n.js';
 
 export function srtP(k) {
   if (state.pwSortK === k) state.pwSortD *= -1;
@@ -40,7 +41,7 @@ export function buildPowerTable() {
     tr.innerHTML =
       `<td class="num" style="color:#aaa;font-size:11px">${i + 1}</td>` +
       `<td><div class="tcl pw-name-cell" onclick="goJourney('${t.name}')" title="Go to team journey">` +
-      `${flag(t.name)}<span class="pw-team-name">${t.name}</span><span class="gb">${t.group}</span></div></td>` +
+      `${flag(t.name)}<span class="pw-team-name" data-team="${t.name}">${tTeam(t.name)}</span><span class="gb">${t.group}</span></div></td>` +
       `<td class="num"><span class="gb">${t.group}</span></td>` +
       `<td class="num"><div class="pb"><div class="pbg" style="width:50px"><div style="width:${ovrBar}%;height:5px;border-radius:3px;background:#9b74ff"></div></div><b>${t.ovr}</b></div></td>` +
       `<td class="num"><input class="pw-inp" type="number" step="0.1" min="55" max="99" value="${t.df}" onchange="updateRating('${t.name}','df',this.value)" onclick="event.stopPropagation()"></td>` +

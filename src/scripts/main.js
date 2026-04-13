@@ -180,7 +180,54 @@ function runAll() {
     if (se) se.innerHTML = '';
 
     buildUI();
+    saveStateToLS();
   }, 60);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE PERSISTENCE — save/restore simulation state via localStorage
+// ═══════════════════════════════════════════════════════════════════════════
+const _LS_KEY = 'wc26_sim_state';
+
+function saveStateToLS() {
+  if (!state.STATS) return;
+  try {
+    localStorage.setItem(_LS_KEY, JSON.stringify({ STATS: state.STATS, LAST: state.LAST }));
+  } catch (e) {
+    console.warn('wc26: state too large for localStorage, skipping persist');
+  }
+}
+
+function loadStateFromLS() {
+  try {
+    const raw = localStorage.getItem(_LS_KEY);
+    if (!raw) return false;
+    const snap = JSON.parse(raw);
+    if (!snap?.STATS) return false;
+    state.STATS = snap.STATS;
+    if (snap.LAST) state.LAST = snap.LAST;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function clearSavedSim() {
+  localStorage.removeItem(_LS_KEY);
+  state.SIMS = []; state.STATS = null; state.LAST = null;
+  state.filtered = []; state.page = 0; state._muf = null;
+  state.stageSortK = 'champ'; state.stageSortD = -1;
+  ['cbanner','mcGrid','stageBody','groupsEl','fixtureEl','bracketEl','annexPanel',
+   'simList','pagination','journeyEl','statsEl','pwBody'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.innerHTML = '';
+  });
+  const bDet = document.getElementById('browserDetail');
+  if (bDet) bDet.style.display = 'none';
+  const bMain = document.getElementById('browserMain');
+  if (bMain) bMain.style.display = 'block';
+  const info = document.getElementById('info');
+  if (info) info.textContent = '';
+  buildPowerTable();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -241,6 +288,9 @@ Object.assign(window, {
   // Onboarding
   obOpen,
 
+  // State persistence
+  clearSavedSim,
+
   // Upset factor slider (inline oninput handler)
   updateUpex: (v) => setUpex(v),
 
@@ -260,4 +310,10 @@ window.addEventListener('DOMContentLoaded', () => {
   drawSquads();
   // Wire up onboarding
   initOnboarding();
+  // Restore previous simulation state if available
+  if (loadStateFromLS()) {
+    buildUI();
+    const info = document.getElementById('info');
+    if (info) info.textContent = (state.STATS?.n || 0) + ' sim · restored';
+  }
 });

@@ -4,6 +4,7 @@
 import { flag, allTeams } from '../../lib/engine.js';
 import { state, advPct, pBar } from '../state.js';
 import { obHighlight } from '../onboarding.js';
+import { tTeam } from '../../lib/i18n.js';
 
 export function drawMonte() {
   const { STATS } = state;
@@ -15,7 +16,7 @@ export function drawMonte() {
   document.getElementById('cbanner').innerHTML =
     `<div class="cbn"><div style="font-size:30px">${flag(top[0])}</div><div>` +
     `<div class="cbn-lbl">Highest Championship</div>` +
-    `<div style="font-size:18px;font-weight:700;margin-top:2px">${top[0]}</div>` +
+    `<div style="font-size:18px;font-weight:700;margin-top:2px">${tTeam(top[0])}</div>` +
     `<div style="font-size:12px;color:#888;margin-top:2px">${(top[1] / n * 100).toFixed(1)}% — ${top[1]}/${n}</div>` +
     `</div></div></div>`;
 
@@ -34,7 +35,7 @@ export function drawMonte() {
     };
     d.innerHTML =
       `<div class="mcf">${flag(name)}</div>` +
-      `<div class="mcn">${name}</div>` +
+      `<div class="mcn" data-team="${name}">${tTeam(name)}</div>` +
       `<div class="mcp">${pct}%</div>` +
       `<div class="mcs">${cnt}/${n}</div>` +
       `<div class="mcb"><div class="mcbf" style="width:${bar}%"></div></div>`;
@@ -77,7 +78,7 @@ export function drawStageTable() {
     const tr = document.createElement('tr');
     tr.onclick = () => window.goJourney(r.name);
     tr.innerHTML =
-      `<td><div class="tcl">${flag(r.name)}${r.name}</div></td>` +
+      `<td><div class="tcl" data-team="${r.name}">${flag(r.name)}${tTeam(r.name)}</div></td>` +
       `<td class="num"><span class="gb">${r.group}</span></td>` +
       `<td class="num">${pBar(r.adv, mAdv, '#f59e0b')}</td>` +
       `<td class="num">${pBar(r.r16, mR16, '#9b74ff')}</td>` +

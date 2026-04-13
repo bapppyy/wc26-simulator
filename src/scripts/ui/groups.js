@@ -5,6 +5,7 @@ import { flag } from '../../lib/engine.js';
 import { DATA } from '../../lib/data.js';
 import { GKEYS } from '../../lib/constants.js';
 import { state } from '../state.js';
+import { tTeam } from '../../lib/i18n.js';
 
 export function drawGroups() {
   const { LAST } = state;
@@ -31,7 +32,7 @@ export function drawGroups() {
       const gd = t.gf - t.ga;
       c.innerHTML +=
         `<div class="gr ${cls}" onclick="goJourney('${t.name}')"><span class="gn">${i + 1}</span>` +
-        `<div class="gtm"><span>${flag(t.name)}</span><span>${t.name}</span></div>` +
+        `<div class="gtm"><span>${flag(t.name)}</span><span data-team="${t.name}">${tTeam(t.name)}</span></div>` +
         `<span class="num">${t.gf}</span><span class="num">${t.ga}</span>` +
         `<span class="num">${gd > 0 ? '+' : ''}${gd}</span><span class="num b">${t.pts}</span></div>`;
     });

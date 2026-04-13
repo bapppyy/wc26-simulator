@@ -1,8 +1,8 @@
 /**
- * Round SVG flag helper using the 'country-flag-icons' package.
+ * Round flag helper using the Circle Flags open-source CDN.
  * Falls back to the emoji flag for any team without an ISO-3166-1 mapping.
+ * CDN: https://kapowaz.github.io/circle-flags/flags/<iso>.svg
  */
-import * as svgFlags from 'country-flag-icons/string/3x2';
 
 /** Map team names (as used in data.js) to ISO 3166-1 alpha-2 codes. */
 export const TEAM_ISO = {
@@ -18,7 +18,7 @@ export const TEAM_ISO = {
   'Colombia':       'CO',
   'Croatia':        'HR',
   'Curaçao':        'CW',
-  'Czech Republic': 'CZ',
+  'Czechia':        'CZ',
   'DR Congo':       'CD',
   'Ecuador':        'EC',
   'Egypt':          'EG',
@@ -61,11 +61,12 @@ export const TEAM_ISO = {
  * @param {string} name  Team name as stored in data.js
  * @param {string} emoji Fallback emoji flag (DATA[name].f)
  */
+const CDN = 'https://kapowaz.github.io/circle-flags/flags';
+
 export function flagHtml(name, emoji = '🏴') {
   const iso = TEAM_ISO[name];
-  const svg = iso ? svgFlags[iso] : null;
-  if (!svg) {
+  if (!iso) {
     return `<span class="flag-em" role="img" aria-label="${name}">${emoji}</span>`;
   }
-  return `<span class="flag-svg" role="img" aria-label="${name}" title="${name}">${svg}</span>`;
+  return `<img src="${CDN}/${iso.toLowerCase()}.svg" alt="${name}" class="flag-ci" loading="lazy" />`;
 }

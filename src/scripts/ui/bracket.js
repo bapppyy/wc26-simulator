@@ -3,6 +3,7 @@
 
 import { flag } from '../../lib/engine.js';
 import { state } from '../state.js';
+import { tTeam } from '../../lib/i18n.js';
 
 export function drawBracket() {
   drawAnnexPanel();
@@ -29,8 +30,8 @@ export function drawBracket() {
       const box = document.createElement('div');
       box.className = 'bm';
       box.innerHTML =
-        `<div class="bt ${wA ? 'W' : 'L'}">${flag(m.a)}${m.a}<span>${m.sa}</span></div>` +
-        `<div class="bt ${!wA ? 'W' : 'L'}">${flag(m.b)}${m.b}<span>${m.sb}</span></div>` +
+        `<div class="bt ${wA ? 'W' : 'L'}" data-team="${m.a}">${flag(m.a)}${tTeam(m.a)}<span>${m.sa}</span></div>` +
+        `<div class="bt ${!wA ? 'W' : 'L'}" data-team="${m.b}">${flag(m.b)}${tTeam(m.b)}<span>${m.sb}</span></div>` +
         (m.pen ? `<div class="bsub">pen.${m.penA}-${m.penB}</div>` : m.et ? `<div class="bsub">AET</div>` : '');
       const _m = m;
       box.onclick = () => window.openMatchModal(_m);
@@ -50,8 +51,8 @@ export function drawBracket() {
     box.innerHTML =
       `<div style="padding:5px 6px"><div style="font-size:10px;color:#aaa;margin-bottom:3px;font-weight:700">3rd Place</div>` +
       `<div class="bm">` +
-      `<div class="bt ${wA ? 'W' : 'L'}">${flag(t.a)}${t.a}<span>${t.sa}</span></div>` +
-      `<div class="bt ${!wA ? 'W' : 'L'}">${flag(t.b)}${t.b}<span>${t.sb}</span></div>` +
+      `<div class="bt ${wA ? 'W' : 'L'}" data-team="${t.a}">${flag(t.a)}${tTeam(t.a)}<span>${t.sa}</span></div>` +
+      `<div class="bt ${!wA ? 'W' : 'L'}" data-team="${t.b}">${flag(t.b)}${tTeam(t.b)}<span>${t.sb}</span></div>` +
       (t.pen ? `<div class="bsub">pen.${t.penA}-${t.penB}</div>` : t.et ? `<div class="bsub">AET</div>` : '') +
       `</div></div>`;
     const _t = LAST.third;
@@ -63,7 +64,7 @@ export function drawBracket() {
   champ.style.cssText = 'padding:14px 8px;text-align:center';
   champ.innerHTML =
     `<div style="font-size:28px">${flag(LAST.champion)}</div>` +
-    `<div style="font-size:13px;font-weight:700;margin-top:6px">${LAST.champion}</div>` +
+    `<div style="font-size:13px;font-weight:700;margin-top:6px">${tTeam(LAST.champion)}</div>` +
     `<div style="font-size:11px;color:#888;margin-top:3px">World Champion</div>`;
   extra.appendChild(champ);
   el.appendChild(extra);
