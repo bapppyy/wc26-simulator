@@ -7,6 +7,7 @@ import { state, advPct } from '../state.js';
 import { getObTeam } from '../onboarding.js';
 import { openMatchModal } from './modals.js';
 import { ui, defaultLang } from '../../i18n/ui';
+import { tTeam } from '../../lib/i18n.js';
 
 function _cd() {
   const lang = (typeof localStorage !== 'undefined' && localStorage.getItem('wc26_lang')) || defaultLang;
@@ -23,7 +24,7 @@ export function buildJourneySel() {
   allTeams().sort((a, b) => a.name.localeCompare(b.name, 'tr')).forEach(t => {
     const o = document.createElement('option');
     o.value = t.name;
-    o.textContent = `${t.flag} ${t.name} (Group ${t.group})`;
+    o.textContent = `${tTeam(t.name)} (Group ${t.group})`;
     sel.appendChild(o);
   });
 
@@ -71,8 +72,8 @@ export function showJourney() {
 
   // Header
   el.innerHTML =
-    `<div class="jh"><div class="jf">${td.f}</div><div>` +
-    `<div class="jn">${name}</div>` +
+    `<div class="jh"><div class="jf">${flag(name)}</div><div>` +
+    `<div class="jn">${tTeam(name)}</div>` +
     `<div class="jsb">Group ${td.g} · OVR ${td.ovr} · DF ${td.df} · MF ${td.mf} · FW ${td.fw}</div>` +
     `<div class="jpls"><span class="jp">Group qualification <b>${advPct(name).toFixed(1)}%</b></span>` +
     `<span class="jp">Championship <b>${(champCnt / n * 100).toFixed(1)}%</b></span></div>` +
@@ -119,7 +120,7 @@ export function showJourney() {
     card.className = 'jfxc';
     card.innerHTML =
       `<div class="jfxm"><b>${fx[2]}</b><span>·</span><span>${fx[3]}</span><span>·</span><span>Group ${td.g}</span></div>` +
-      `<div class="jfxb"><div style="font-size:13px;font-weight:600">${td.f} ${name}</div>` +
+      `<div class="jfxb"><div style="font-size:13px;font-weight:600">${flag(name)} ${tTeam(name)}</div>` +
       `<div class="jfxs"><div class="jfxsb">${myG.toFixed(1)}–${opG.toFixed(1)}</div><div style="font-size:10px;color:#aaa">avg. score</div></div>` +
       `<div style="text-align:right;font-size:13px;color:#aaa">${opp} ${flag(opp)}</div></div>` +
       `<div class="jfxw">` +
@@ -322,9 +323,9 @@ function openChampModal(team, vsOpp = null) {
     return fin && (fin.a === vsOpp || fin.b === vsOpp);
   });
 
-  document.getElementById('modalTitle').textContent = vsOpp
-    ? `🏆 ${team} · ${d['champ.finalsvs'] || 'Finals won vs.'} ${flag(vsOpp)} ${vsOpp}`
-    : `🏆 ${team} · All Championships`;
+  document.getElementById('modalTitle').innerHTML = vsOpp
+    ? `🏆 ${tTeam(team)} · ${d['champ.finalsvs'] || 'Finals won vs.'} ${flag(vsOpp)} ${tTeam(vsOpp)}`
+    : `🏆 ${tTeam(team)} · All Championships`;
 
   const body = document.getElementById('modalBody');
   body.innerHTML = '';
@@ -410,8 +411,8 @@ function openOppModal(team, opp, round, data, n) {
   const roundProp = { R32: 'r32', R16: 'r16', QF: 'qf', SF: 'sf', Final: 'fin', '3.Yer': 'third' }[round];
 
   // ── Title with contextual label (back button injected per-match later) ────
-  document.getElementById('modalTitle').textContent =
-    `${flag(team)} ${team} vs ${flag(opp)} ${opp} — ${rndLabel}`;
+  document.getElementById('modalTitle').innerHTML =
+    `${flag(team)} ${tTeam(team)} vs ${flag(opp)} ${tTeam(opp)} — ${rndLabel}`;
 
   // ── Static HTML (stats section) ──────────────────────────────────────────
   document.getElementById('modalBody').innerHTML =
@@ -464,6 +465,11 @@ function openOppModal(team, opp, round, data, n) {
     const note = document.createElement('div');
     note.style.cssText = 'font-size:12px;color:#aaa;font-style:italic';
     note.textContent = 'No individual match data for this round.';
+    section.appendChild(note);
+  } else if (!state.SIMS.length) {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:12px;color:#aaa;font-style:italic';
+    note.textContent = 'Re-simulate to view individual match history.';
     section.appendChild(note);
   } else {
     const matches = [];
@@ -522,7 +528,7 @@ function openOppModal(team, opp, round, data, n) {
         // Exactly mirrors the openMatchModal title and mhero display.
         const scoreEl = document.createElement('span');
         scoreEl.style.cssText = 'font-size:12px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
-        scoreEl.textContent = `${flag(m.a)}${m.a} ${homeScore}–${awayScore} ${m.b}${flag(m.b)}${suffix}`;
+        scoreEl.innerHTML = `${flag(m.a)}${tTeam(m.a)} ${homeScore}–${awayScore} ${tTeam(m.b)}${flag(m.b)}${suffix}`;
 
         const badgeEl = document.createElement('span');
         badgeEl.style.cssText =

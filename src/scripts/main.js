@@ -40,7 +40,7 @@ import {
 } from './ui/modals.js';
 
 // ── Onboarding ───────────────────────────────────────────────────────────────
-import { initOnboarding, obHighlight, obBuild, obOpen } from './onboarding.js';
+import { initOnboarding, obHighlight, obBuild, obOpen, obClose } from './onboarding.js';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // RUN ALL — Full simulation batch
@@ -231,6 +231,33 @@ function clearSavedSim() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// REFRESH PANELS — re-render all JS-built panels after language change
+// Only re-renders if a simulation has been run (STATS exists).
+// ═══════════════════════════════════════════════════════════════════════════
+function refreshPanels() {
+  // Always re-render panels that use tTeam() regardless of simulation state
+  buildJourneySel();
+  buildFilterSels();
+  drawSquads();
+  drawVote();
+  // Re-render the onboarding picker list if it's currently open
+  const obBg = document.getElementById('obBg');
+  if (obBg && obBg.style.display === 'flex') {
+    const si = document.getElementById('obSearch');
+    obBuild(si ? si.value : '');
+  }
+  if (!state.STATS) return;
+  drawMonte();
+  drawGroups();
+  drawFixture();
+  drawBracket();
+  drawStats();
+  buildPowerTable();
+  showJourney();
+  setTimeout(obHighlight, 60);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // BUILD ALL UI — called after every successful simulation run
 // ═══════════════════════════════════════════════════════════════════════════
 function buildUI() {
@@ -287,9 +314,14 @@ Object.assign(window, {
 
   // Onboarding
   obOpen,
+  obClose,
+  obBuild,
 
   // State persistence
   clearSavedSim,
+
+  // Language change re-render
+  refreshPanels,
 
   // Upset factor slider (inline oninput handler)
   updateUpex: (v) => setUpex(v),

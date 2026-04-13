@@ -3,6 +3,8 @@
 
 import { DATA } from '../../lib/data.js';
 import { GKEYS } from '../../lib/constants.js';
+import { flagHtml } from '../../lib/flagSvg.js';
+import { tTeam } from '../../lib/i18n.js';
 
 export function drawSquads() {
   const el = document.getElementById('squadsEl');
@@ -27,8 +29,8 @@ export function drawSquads() {
       html +=
         `<div class="squad-team-card">` +
         `<div class="squad-team-hdr" onclick="goJourney('${team.name}')" style="cursor:pointer">` +
-        `<span style="font-size:18px">${team.f}</span>` +
-        `<span style="font-weight:700;font-size:13px">${team.name}</span>` +
+        flagHtml(team.name, team.f) +
+        `<span style="font-weight:700;font-size:13px">${tTeam(team.name)}</span>` +
         `<span class="gb">${gk}</span>` +
         `<span style="font-size:11px;color:#aaa;margin-left:auto">OVR ${team.ovr}</span>` +
         `</div>` +

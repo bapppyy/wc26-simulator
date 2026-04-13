@@ -8,6 +8,7 @@
     <button id="obBadge" class="ob-badge" onclick="obOpen()" style="display:none">
       <span id="obBadgeFlag"></span><span id="obBadgeName"></span><span style="color:#aaa;font-size:11px">↺</span>
     </button>
+    <button id="obSelectBtn" class="ob-badge" onclick="obOpen()" data-i18n="header.selectTeam" style="font-size:12px;padding:4px 10px">Select Team</button>
     <select id="langSel" class="sel" style="font-size:12px;padding:4px 6px" aria-label="Language">
       <option value="en">🌐 English</option>
       <option value="es">🌐 Español</option>
@@ -36,6 +37,12 @@
       if (key && dict[key] != null) el.textContent = dict[key];
     });
 
+    // Apply translated placeholders
+    document.querySelectorAll<HTMLInputElement>('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (key && dict[key] != null) el.placeholder = dict[key];
+    });
+
     // Handle RTL direction
     const html = document.documentElement;
     if (rtlLangs.has(lang)) {
@@ -57,6 +64,8 @@
       const val = sel.value as Lang;
       localStorage.setItem('wc26_lang', val);
       applyLang(val);
+      // Re-render JS-built panels so tTeam() picks up new language
+      (window as any).refreshPanels?.();
     });
   }
 

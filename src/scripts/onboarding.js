@@ -127,6 +127,17 @@ export function obSelect(name) {
   if (btn) { btn.disabled = false; btn.classList.add('ready'); }
 }
 
+// ── Close the picker modal (dismiss without changing state) ───────────────────
+export function obClose() {
+  const bg = document.getElementById('obBg');
+  if (bg) bg.style.display = 'none';
+  // If no team confirmed yet, show the Select Team button
+  if (!obTeam) {
+    const selBtn = document.getElementById('obSelectBtn');
+    if (selBtn) selBtn.style.display = '';
+  }
+}
+
 // ── Open the picker modal ─────────────────────────────────────────────────────
 export function obOpen() {
   obPending = obTeam;
@@ -157,6 +168,8 @@ export function obConfirm() {
     if (fl) fl.innerHTML = flagHtml(obTeam, d.f);
     const nm = document.getElementById('obBadgeName');
     if (nm) nm.textContent = obTeam;
+    const selBtn = document.getElementById('obSelectBtn');
+    if (selBtn) selBtn.style.display = 'none';
   }
 
   const jSel = document.getElementById('journeyTeam');
@@ -207,6 +220,9 @@ export function initOnboarding() {
     const bg = document.getElementById('obBg');
     if (bg) bg.style.display = 'none';
     obTeam = null;
+    // Show the "Select Team" button so user can re-open picker later
+    const selBtn = document.getElementById('obSelectBtn');
+    if (selBtn) selBtn.style.display = '';
   });
 
   // Random button

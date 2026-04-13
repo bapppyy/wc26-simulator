@@ -56,10 +56,18 @@ export function drawVote() {
       }
       card.appendChild(sls);
 
-      // Vote button per team
+      // Vote + Reset buttons
       const btn = document.createElement('button');
       btn.className = 'vote-submit'; btn.textContent = 'Vote';
-      (function(tname, tSafeId, tBtn) {
+
+      const resetBtn = document.createElement('button');
+      resetBtn.className = 'vote-reset';
+      resetBtn.textContent = 'Reset';
+      resetBtn.style.cssText = 'font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#888;font-family:inherit';
+      resetBtn.onmouseover = () => { resetBtn.style.background = '#f0f0ee'; };
+      resetBtn.onmouseout  = () => { resetBtn.style.background = '#fff'; };
+
+      (function(tname, tSafeId, tBtn, tReset, initDf, initMf, initFw) {
         tBtn.addEventListener('click', function() {
           const df = parseInt(document.getElementById(`vsl_${tSafeId}_DF`).value);
           const mf = parseInt(document.getElementById(`vsl_${tSafeId}_MF`).value);
@@ -68,9 +76,23 @@ export function drawVote() {
           alert(tname + ' votes saved!');
           tBtn.textContent = 'Saved ✓'; tBtn.classList.add('vote-submitted');
         });
-      })(name, safeId, btn);
+        tReset.addEventListener('click', function() {
+          ['DF', 'MF', 'FW'].forEach((f, i) => {
+            const val = [initDf, initMf, initFw][i];
+            const sl = document.getElementById(`vsl_${tSafeId}_${f}`);
+            const vsp = document.getElementById(`vsv_${tSafeId}_${f}`);
+            if (sl) sl.value = val;
+            if (vsp) vsp.textContent = val;
+          });
+          tBtn.textContent = 'Vote'; tBtn.classList.remove('vote-submitted');
+        });
+      })(name, safeId, btn, resetBtn, Math.round(d.df), Math.round(d.mf), Math.round(d.fw));
 
-      card.appendChild(btn);
+      const btnRow = document.createElement('div');
+      btnRow.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin-top:8px';
+      btnRow.appendChild(resetBtn);
+      btnRow.appendChild(btn);
+      card.appendChild(btnRow);
       grpDiv.appendChild(card);
     }
     el.appendChild(grpDiv);

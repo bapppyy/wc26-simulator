@@ -22,7 +22,7 @@ export const TEAM_ISO = {
   'DR Congo':       'CD',
   'Ecuador':        'EC',
   'Egypt':          'EG',
-  'England':        'GB',   // ISO 3166-1 has no GB-ENG
+  'England':        'gb-eng',
   'France':         'FR',
   'Germany':        'DE',
   'Ghana':          'GH',
@@ -42,7 +42,7 @@ export const TEAM_ISO = {
   'Portugal':       'PT',
   'Qatar':          'QA',
   'Saudi Arabia':   'SA',
-  'Scotland':       'GB',   // ISO 3166-1 has no GB-SCT
+  'Scotland':       'gb-sct',
   'Senegal':        'SN',
   'South Africa':   'ZA',
   'South Korea':    'KR',

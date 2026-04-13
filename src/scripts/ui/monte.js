@@ -62,7 +62,7 @@ export function drawStageTable() {
   const sortD = state.stageSortD;
   rows.sort((a, b) => {
     const va = a[sortK] ?? a.name, vb = b[sortK] ?? b.name;
-    return typeof va === 'string' ? va.localeCompare(vb, 'tr') * sortD : (vb - va) * sortD;
+    return typeof va === 'string' ? va.localeCompare(vb, 'tr') * sortD : (va - vb) * sortD;
   });
 
   const mAdv = Math.max(...rows.map(r => r.adv), .01);
@@ -71,6 +71,29 @@ export function drawStageTable() {
   const mSF  = Math.max(...rows.map(r => r.sf),  .01);
   const mFin = Math.max(...rows.map(r => r.fin), .01);
   const mCh  = Math.max(...rows.map(r => r.champ), .01);
+
+  // Update sort indicator on column headers
+  const tbl = document.getElementById('stageTable');
+  if (tbl) {
+    const keyAttr = { name: "srtS('name')", group: "srtS('group')", adv: "srtS('adv')", r16: "srtS('r16')", qf: "srtS('qf')", sf: "srtS('sf')", fin: "srtS('fin')", champ: "srtS('champ')" };
+    tbl.querySelectorAll('thead th').forEach(th => {
+      const oc = th.getAttribute('onclick') || '';
+      // Strip any previous indicator
+      const base = th.dataset.i18n
+        ? (document.querySelector(`[data-i18n="${th.dataset.i18n}"]`) === th ? th.getAttribute('data-i18n') : null)
+        : null;
+      th.querySelector('.sort-ind')?.remove();
+      th.style.color = '';
+      if (oc === keyAttr[sortK]) {
+        const ind = document.createElement('span');
+        ind.className = 'sort-ind';
+        ind.style.cssText = 'margin-left:3px;font-size:10px;color:#9b74ff';
+        ind.textContent = sortD < 0 ? '▼' : '▲';
+        th.appendChild(ind);
+        th.style.color = '#9b74ff';
+      }
+    });
+  }
 
   const tbody = document.getElementById('stageBody');
   tbody.innerHTML = '';

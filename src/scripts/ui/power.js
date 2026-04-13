@@ -27,7 +27,7 @@ export function buildPowerTable() {
   rows.sort((a, b) => {
     const va = a[sortK] ?? a.name, vb = b[sortK] ?? b.name;
     if (typeof va === 'string') return va.localeCompare(vb, 'tr') * sortD;
-    return (vb - va) * sortD;
+    return (va - vb) * sortD;
   });
 
   const maxAdv = hasStats ? Math.max(...rows.map(r => r.adv), .01) : 1;

@@ -1,20 +1,21 @@
 ---
 ---
 <div id="obBg" class="ob-bg">
-  <div class="ob-modal">
+  <div class="ob-modal" style="position:relative">
+    <button onclick="obClose()" aria-label="Close" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:18px;color:#aaa;cursor:pointer;line-height:1;padding:4px 6px;border-radius:6px" onmouseover="this.style.background='#f0f0ee';this.style.color='#333'" onmouseout="this.style.background='none';this.style.color='#aaa'">✕</button>
     <div class="ob-hdr">
-      <div class="ob-title">Pick Your Team</div>
-      <div class="ob-sub">Which team are you supporting in the 2026 FIFA World Cup? All data will be highlighted for your team.</div>
+      <div class="ob-title" data-i18n="ob.title">Pick Your Team</div>
+      <div class="ob-sub" data-i18n="ob.sub">Which team are you supporting in the 2026 FIFA World Cup? All data will be highlighted for your team.</div>
     </div>
     <div class="ob-search">
-      <input id="obSearch" class="ob-search-inp" type="text" placeholder="Search teams...">
+      <input id="obSearch" class="ob-search-inp" type="text" placeholder="Search teams..." data-i18n-placeholder="ob.search">
     </div>
     <div class="ob-list" id="obList"></div>
     <div class="ob-footer">
-      <button class="ob-rand" id="obRandBtn">🎲 Random Team</button>
+      <button class="ob-rand" id="obRandBtn" data-i18n="ob.random">🎲 Random Team</button>
       <div style="display:flex;gap:8px">
-        <button class="ob-skip" id="obSkipBtn">Skip →</button>
-        <button class="ob-ok" id="obOkBtn" disabled>Continue →</button>
+        <button class="ob-skip" id="obSkipBtn" data-i18n="ob.skip">Skip →</button>
+        <button class="ob-ok" id="obOkBtn" disabled data-i18n="ob.ok">Continue →</button>
       </div>
     </div>
   </div>

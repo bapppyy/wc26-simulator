@@ -5,6 +5,7 @@ import { flag, allTeams, rerunDetailed } from '../../lib/engine.js';
 import { STAGE_LABELS, STAGE_TAG } from '../../lib/constants.js';
 import { state, scoreStr } from '../state.js';
 import { openMatchModal, buildFullReportModal, openFullReport, openReportMatch } from './modals.js';
+import { tTeam } from '../../lib/i18n.js';
 
 export function buildFilterSels() {
   const sel = document.getElementById('fTeam');
@@ -12,7 +13,7 @@ export function buildFilterSels() {
   allTeams().sort((a, b) => a.name.localeCompare(b.name, 'tr')).forEach(t => {
     const o = document.createElement('option');
     o.value = t.name;
-    o.textContent = `${t.flag} ${t.name}`;
+    o.textContent = tTeam(t.name);
     sel.appendChild(o);
   });
 }
