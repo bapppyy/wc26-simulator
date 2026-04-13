@@ -48,9 +48,9 @@ export function drawFixture() {
       card.style.background = bg;
       card.style.borderColor = bg === '#fff' ? '#e5e5e0' : '#cdd3de';
       card.innerHTML =
-        `<div class="mta ${wA ? 'W' : 'L'}"><span>${flag(m.a)}</span><span data-team="${m.a}" onclick="event.stopPropagation();goJourney('${m.a}')">${tTeam(m.a)}</span></div>` +
+        `<div class="mta ${wA ? 'W' : 'L'}"><span onclick="event.stopPropagation();goJourney('${m.a}')" style="cursor:pointer">${flag(m.a)}</span><span data-team="${m.a}" onclick="event.stopPropagation();goJourney('${m.a}')">${tTeam(m.a)}</span></div>` +
         `<div class="scc">${tag}<div class="scb">${m.sa}–${m.sb}</div>${sub ? `<div class="scs">${sub}</div>` : ''}</div>` +
-        `<div class="mtb ${!wA ? 'W' : 'L'}"><span data-team="${m.b}" onclick="event.stopPropagation();goJourney('${m.b}')">${tTeam(m.b)}</span><span>${flag(m.b)}</span></div>`;
+        `<div class="mtb ${!wA ? 'W' : 'L'}"><span data-team="${m.b}" onclick="event.stopPropagation();goJourney('${m.b}')">${tTeam(m.b)}</span><span onclick="event.stopPropagation();goJourney('${m.b}')" style="cursor:pointer">${flag(m.b)}</span></div>`;
 
       const _m = m;
       card.onclick = () => window.openMatchModal(_m, rnd);

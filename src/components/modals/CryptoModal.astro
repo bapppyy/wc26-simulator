@@ -1,0 +1,89 @@
+---
+---
+<div id="cryptoModal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeCryptoModal()">
+  <div class="modal" style="max-width:420px">
+    <div class="mhdr">
+      <span class="mtit">Donate Crypto</span>
+      <button class="xb" onclick="closeCryptoModal()">×</button>
+    </div>
+    <div class="mbdy" style="padding:18px 20px">
+      <p style="font-size:12px;color:#888;margin:0 0 16px">Support BapLab development with a crypto donation. Tap an address to copy.</p>
+
+      <div id="cryptoAddrList" style="display:flex;flex-direction:column;gap:12px">
+
+        <div class="crypto-row">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:700;color:#1a1a1a">USDT</span>
+            <span style="font-size:10px;color:#888;background:#f5f5f3;padding:2px 7px;border-radius:10px;font-weight:600">TRC20</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#f8f8f6;border:1px solid #e5e5e0;border-radius:9px;padding:9px 12px">
+            <code style="font-size:11px;color:#444;flex:1;word-break:break-all;font-family:monospace" id="addr-usdt">TNLrciHXTVzStstN8CL43vzdbwkKKBPHFp</code>
+            <button onclick="copyCryptoAddr('addr-usdt','copy-usdt')" style="flex-shrink:0;padding:4px 10px;font-size:11px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#555;font-family:inherit;transition:background .15s" id="copy-usdt">Copy</button>
+          </div>
+        </div>
+
+        <div class="crypto-row">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:700;color:#1a1a1a">ETH</span>
+            <span style="font-size:10px;color:#888;background:#f5f5f3;padding:2px 7px;border-radius:10px;font-weight:600">ERC20</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#f8f8f6;border:1px solid #e5e5e0;border-radius:9px;padding:9px 12px">
+            <code style="font-size:11px;color:#444;flex:1;word-break:break-all;font-family:monospace" id="addr-eth">0x7e701c8f84c374592e334d0427e20370a06703e8</code>
+            <button onclick="copyCryptoAddr('addr-eth','copy-eth')" style="flex-shrink:0;padding:4px 10px;font-size:11px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#555;font-family:inherit;transition:background .15s" id="copy-eth">Copy</button>
+          </div>
+        </div>
+
+        <div class="crypto-row">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:700;color:#1a1a1a">BTC</span>
+            <span style="font-size:10px;color:#888;background:#f5f5f3;padding:2px 7px;border-radius:10px;font-weight:600">Bitcoin</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#f8f8f6;border:1px solid #e5e5e0;border-radius:9px;padding:9px 12px">
+            <code style="font-size:11px;color:#444;flex:1;word-break:break-all;font-family:monospace" id="addr-btc">16bc9Ckm2k5zWg9nEL5UhGZfgQ8zpYhdWr</code>
+            <button onclick="copyCryptoAddr('addr-btc','copy-btc')" style="flex-shrink:0;padding:4px 10px;font-size:11px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#555;font-family:inherit;transition:background .15s" id="copy-btc">Copy</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openCryptoModal() {
+    const m = document.getElementById('cryptoModal');
+    if (m) m.style.display = 'flex';
+  }
+  function closeCryptoModal() {
+    const m = document.getElementById('cryptoModal');
+    if (m) m.style.display = 'none';
+  }
+  function copyCryptoAddr(addrId, btnId) {
+    const addr = document.getElementById(addrId)?.textContent?.trim();
+    const btn = document.getElementById(btnId);
+    if (!addr || !btn) return;
+    navigator.clipboard.writeText(addr).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      btn.style.background = '#f0fdf4';
+      btn.style.borderColor = '#86efac';
+      btn.style.color = '#15803d';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 2000);
+    }).catch(() => {
+      // Fallback for browsers without clipboard API
+      const el = document.getElementById(addrId);
+      if (el) {
+        const range = document.createRange();
+        range.selectNode(el);
+        window.getSelection()?.removeAllRanges();
+        window.getSelection()?.addRange(range);
+      }
+    });
+  }
+  Object.assign(window, { openCryptoModal, closeCryptoModal, copyCryptoAddr });
+</script>

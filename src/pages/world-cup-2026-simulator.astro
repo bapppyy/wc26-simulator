@@ -14,6 +14,7 @@ import PowerPanel from '../components/panels/PowerPanel.astro';
 import VotePanel from '../components/panels/VotePanel.astro';
 import OnboardingModal from '../components/modals/OnboardingModal.astro';
 import MatchModal from '../components/modals/MatchModal.astro';
+import CryptoModal from '../components/modals/CryptoModal.astro';
 ---
 
 <html lang="en">
@@ -64,8 +65,15 @@ import MatchModal from '../components/modals/MatchModal.astro';
     </div>
 
     <MatchModal />
+    <CryptoModal />
 
     <footer style="text-align:center;padding:22px 0 32px;font-size:12px;color:#bbb;border-top:1px solid #eee;margin-top:12px;line-height:2">
+      <div style="margin-bottom:10px;font-size:12px;color:#888">
+        Enjoying the simulator?
+        <a href="https://www.patreon.com/baplab" target="_blank" rel="noopener noreferrer" style="color:#9b74ff;font-weight:600;text-decoration:none">Support BapLab on Patreon</a>
+        to fuel the next generation of simulations. &nbsp;·&nbsp;
+        <button onclick="openCryptoModal()" style="font-size:12px;color:#555;background:none;border:1px solid #ddd;border-radius:6px;padding:2px 10px;cursor:pointer;font-family:inherit;transition:background .15s" onmouseover="this.style.background='#f5f5f3'" onmouseout="this.style.background='none'">Donate Crypto</button>
+      </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:6px">
         <a href="/" style="color:#555;text-decoration:none;font-weight:500">← BapLab</a>
         <a href="/blog/" style="color:#555;text-decoration:none;font-weight:500">Blog</a>
