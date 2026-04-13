@@ -1,0 +1,25 @@
+---
+---
+<div id="pBrowser" class="pane">
+  <div id="browserMain">
+    <div class="fbr">
+      <label>Team:</label>
+      <select class="sel" id="fTeam" onchange="applyFilter()"></select>
+      <label>Stage:</label>
+      <select class="sel" id="fStage" onchange="applyFilter()">
+        <option value="">All</option>
+        <option value="Champion">Champion</option>
+        <option value="Final">Finalist</option>
+        <option value="SF">Eliminated in SF</option>
+        <option value="QF">Eliminated in QF</option>
+        <option value="R16">Eliminated in R16</option>
+        <option value="R32">Eliminated in R32</option>
+        <option value="Group">Eliminated in Groups</option>
+      </select>
+      <span class="fc" id="fCount"></span>
+    </div>
+    <div class="sl" id="simList"></div>
+    <div class="pg" id="pagination"></div>
+  </div>
+  <div id="browserDetail" style="display:none"></div>
+</div>

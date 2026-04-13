@@ -1,0 +1,26 @@
+---
+---
+<div id="pMonte" class="pane on">
+  <div id="cbanner"></div>
+  <div class="sec">Championship Probabilities — click → go to sim browser</div>
+  <div class="mcg" id="mcGrid"></div>
+  <div class="sec" style="margin-top:22px">All Stages — click header to sort · click row for journey</div>
+  <div style="overflow-x:auto">
+    <table class="stbl" id="stageTable">
+      <thead>
+        <tr>
+          <th onclick="srtS('name')">Team</th>
+          <th class="num" onclick="srtS('group')" style="cursor:pointer">Group ↕</th>
+          <th class="num" onclick="srtS('adv')">Grp.Qual</th>
+          <th class="num" onclick="srtS('r16')">R16</th>
+          <th class="num" onclick="srtS('qf')">QF</th>
+          <th class="num" onclick="srtS('sf')">SF</th>
+          <th class="num" onclick="srtS('fin')">Final</th>
+          <th class="num" onclick="srtS('champ')">Champion</th>
+        </tr>
+      </thead>
+      <tbody id="stageBody"></tbody>
+    </table>
+  </div>
+  <div id="statsEl"></div>
+</div>

@@ -1,0 +1,69 @@
+---
+---
+<div class="phdr">
+  <div>
+    <div class="ptit">2026 FIFA World Cup Simulator</div>
+    <div class="psub" data-i18n="header.subtitle">48 teams · 1,104 players · Annex C 495 scenarios · Match report every sim · v4.2</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button id="obBadge" class="ob-badge" onclick="obOpen()" style="display:none">
+      <span id="obBadgeFlag"></span><span id="obBadgeName"></span><span style="color:#aaa;font-size:11px">↺</span>
+    </button>
+    <select id="langSel" class="sel" style="font-size:12px;padding:4px 6px" aria-label="Language">
+      <option value="en">🌐 English</option>
+      <option value="es">🌐 Español</option>
+      <option value="fr">🌐 Français</option>
+      <option value="de">🌐 Deutsch</option>
+      <option value="pt">🌐 Português</option>
+      <option value="ja">🌐 日本語</option>
+      <option value="ko">🌐 한국어</option>
+      <option value="ar">🌐 العربية</option>
+      <option value="tr">🌐 Türkçe</option>
+    </select>
+    <button class="btn" data-i18n="header.how" onclick="openHow()">How It Works?</button>
+  </div>
+</div>
+
+<script>
+  import { ui, defaultLang, rtlLangs } from '../i18n/ui';
+  type Lang = keyof typeof ui;
+
+  function applyLang(lang: Lang) {
+    const dict = ui[lang] as Record<string, string>;
+
+    // Apply translated text to all data-i18n elements
+    document.querySelectorAll<HTMLElement>('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (key && dict[key] != null) el.textContent = dict[key];
+    });
+
+    // Handle RTL direction
+    const html = document.documentElement;
+    if (rtlLangs.has(lang)) {
+      html.setAttribute('dir', 'rtl');
+      html.setAttribute('lang', lang);
+    } else {
+      html.setAttribute('dir', 'ltr');
+      html.setAttribute('lang', lang);
+    }
+  }
+
+  function initLang() {
+    const saved = (localStorage.getItem('wc26_lang') || defaultLang) as Lang;
+    const sel = document.getElementById('langSel') as HTMLSelectElement | null;
+    if (sel) sel.value = saved;
+    applyLang(saved);
+
+    sel?.addEventListener('change', () => {
+      const val = sel.value as Lang;
+      localStorage.setItem('wc26_lang', val);
+      applyLang(val);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLang);
+  } else {
+    initLang();
+  }
+</script>

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l \"C:/Users/bplt_/Desktop/wc26sim/src/lib/\"*.js)",
+      "Bash(npm run:*)",
+      "Bash(del:*)"
+    ]
+  }
+}

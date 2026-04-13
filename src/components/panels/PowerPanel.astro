@@ -1,0 +1,28 @@
+---
+---
+<div id="pPower" class="pane">
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+    <button class="btn" onclick="resetRatings()">Reset Ratings</button>
+    <button class="btn pr" onclick="runAll()">Simulate with Updated Ratings</button>
+    <span id="pwChangeBadge" style="font-size:12px;color:#3b82f6"></span>
+  </div>
+  <div class="note">DF/MF/FW are editable · Change then click Simulate</div>
+  <div style="overflow-x:auto">
+    <table class="ptbl" id="pwTable">
+      <thead>
+        <tr>
+          <th class="num" onclick="srtP('rank')">#</th>
+          <th onclick="srtP('name')">Team</th>
+          <th class="num" onclick="srtP('group')" style="cursor:pointer">Group ↕</th>
+          <th class="num" onclick="srtP('ovr')">OVR</th>
+          <th class="num" onclick="srtP('df')">DF (editable)</th>
+          <th class="num" onclick="srtP('mf')">MF (editable)</th>
+          <th class="num" onclick="srtP('fw')">FW (editable)</th>
+          <th class="num" onclick="srtP('adv')">Grp.Qual</th>
+          <th class="num" onclick="srtP('champ')">Champion</th>
+        </tr>
+      </thead>
+      <tbody id="pwBody"></tbody>
+    </table>
+  </div>
+</div>
