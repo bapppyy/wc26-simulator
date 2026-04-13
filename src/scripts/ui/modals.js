@@ -129,20 +129,32 @@ export function buildFullReportModal(s, idx) {
 }
 
 export function openReportMatch(simIdx, nameA, nameB) {
+  function _findAndOpen(s) {
+    const allMs = [
+      ...Object.values(s.grpMatches).flat(),
+      ...s.r32, ...s.r16, ...s.qf, ...s.sf,
+      ...(s.third ? [s.third] : []),
+      ...s.fin,
+    ].filter(Boolean);
+    const m = allMs.find(m => m.a === nameA && m.b === nameB);
+    if (!m) { buildFullReportModal(s, simIdx); return; }
+    openMatchModal(m, m.roundFull || '', simIdx);
+  }
+
   if (!window._reportSim || window._reportSim.idx !== simIdx) {
-    openFullReport(simIdx);
+    // Sim not cached — rerun it and open the specific match directly (skip the list)
+    document.getElementById('modalTitle').textContent = `📋 Sim #${simIdx} — computing...`;
+    document.getElementById('modalBody').innerHTML =
+      `<div style="padding:20px;text-align:center;color:#888"><span class="sp"></span> Loading match...</div>`;
+    document.getElementById('modal').style.display = 'flex';
+    setTimeout(() => {
+      const detailed = rerunDetailed(simIdx);
+      window._reportSim = { idx: simIdx, s: detailed };
+      _findAndOpen(detailed);
+    }, 30);
     return;
   }
-  const s = window._reportSim.s;
-  const allMs = [
-    ...Object.values(s.grpMatches).flat(),
-    ...s.r32, ...s.r16, ...s.qf, ...s.sf,
-    ...(s.third ? [s.third] : []),
-    ...s.fin,
-  ].filter(Boolean);
-  const m = allMs.find(m => m.a === nameA && m.b === nameB);
-  if (!m) return;
-  openMatchModal(m, m.roundFull || "", simIdx);
+  _findAndOpen(window._reportSim.s);
 }
 
 export function openHow() {
