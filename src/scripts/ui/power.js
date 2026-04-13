@@ -1,7 +1,7 @@
 // ── Power Table Panel ─────────────────────────────────────────────────────────
 // Renders the editable team ratings table and handles rating resets.
 
-import { allTeams } from '../../lib/engine.js';
+import { allTeams, flag } from '../../lib/engine.js';
 import { DATA, DATA_ORIG } from '../../lib/data.js';
 import { state, advPct, pBar } from '../state.js';
 
@@ -40,14 +40,14 @@ export function buildPowerTable() {
     tr.innerHTML =
       `<td class="num" style="color:#aaa;font-size:11px">${i + 1}</td>` +
       `<td><div class="tcl pw-name-cell" onclick="goJourney('${t.name}')" title="Go to team journey">` +
-      `<span>${t.flag}</span><span class="pw-team-name">${t.name}</span><span class="gb">${t.group}</span></div></td>` +
+      `${flag(t.name)}<span class="pw-team-name">${t.name}</span><span class="gb">${t.group}</span></div></td>` +
       `<td class="num"><span class="gb">${t.group}</span></td>` +
-      `<td class="num"><div class="pb"><div class="pbg" style="width:50px"><div style="width:${ovrBar}%;height:5px;border-radius:3px;background:#3b82f6"></div></div><b>${t.ovr}</b></div></td>` +
+      `<td class="num"><div class="pb"><div class="pbg" style="width:50px"><div style="width:${ovrBar}%;height:5px;border-radius:3px;background:#9b74ff"></div></div><b>${t.ovr}</b></div></td>` +
       `<td class="num"><input class="pw-inp" type="number" step="0.1" min="55" max="99" value="${t.df}" onchange="updateRating('${t.name}','df',this.value)" onclick="event.stopPropagation()"></td>` +
       `<td class="num"><input class="pw-inp" type="number" step="0.1" min="55" max="99" value="${t.mf}" onchange="updateRating('${t.name}','mf',this.value)" onclick="event.stopPropagation()"></td>` +
       `<td class="num"><input class="pw-inp" type="number" step="0.1" min="55" max="99" value="${t.fw}" onchange="updateRating('${t.name}','fw',this.value)" onclick="event.stopPropagation()"></td>` +
       (hasStats
-        ? `<td class="num">${pBar(t.adv, maxAdv, '#f59e0b')}</td><td class="num">${pBar(t.champ, maxCh, '#22c55e')}</td>`
+        ? `<td class="num">${pBar(t.adv, maxAdv, '#f59e0b')}</td><td class="num">${pBar(t.champ, maxCh, '#00c4ff')}</td>`
         : `<td class="num" style="color:#aaa">—</td><td class="num" style="color:#aaa">—</td>`);
     tbody.appendChild(tr);
   });

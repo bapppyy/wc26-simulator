@@ -1,28 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  /* BapLab phosphor-green dark palette */
-  --color-ph:        #00ff41;   /* phosphor green */
-  --color-ph-dim:    #00cc33;   /* dimmer green for hover */
-  --color-ph-glow:   #00ff4133; /* transparent glow */
-  --color-ph-border: #1a3a1a;   /* subtle green-tinted border */
-  --color-bg:        #080c08;   /* near-black with green cast */
-  --color-card:      #0d110d;   /* card background */
-  --color-card-2:    #111811;   /* slightly lighter card */
-  --color-text:      #d4e8d4;   /* soft green-white */
-  --color-muted:     #4a6a4a;   /* muted text */
-  --color-line:      #1a2a1a;   /* divider lines */
-
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
-
-  --radius-card: 14px;
+  /* BapLab cyber-neon palette: cyan + magenta */
+  --color-cy:          #00d4ff;   /* primary cyan */
+  --color-cy-dim:      #00b8e6;   /* hover cyan */
+  --color-cy-glow:     rgba(0,212,255,.18);
+  --color-cy-border:   #0a2030;
+  --color-mg:          #d400ff;   /* magenta */
+  --color-mg-dim:      #b800e6;
+  --color-mg-glow:     rgba(212,0,255,.15);
+  --color-bg:          #080b10;   /* near-black with blue cast */
+  --color-card:        #0d1118;
+  --color-card-2:      #111820;
+  --color-text:        #c8dce8;
+  --color-muted:       #4a6070;
+  --color-line:        #151f28;
+  --radius-card:       14px;
 }
 
-/* Reset & base */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
-
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -31,40 +28,31 @@ body {
   min-height: 100dvh;
 }
 
-/* ── Phosphor glow utility (non-Tailwind) ───────────────── */
-.glow {
-  text-shadow: 0 0 8px var(--color-ph-glow), 0 0 20px rgba(0,255,65,.15);
-}
+/* ── Cyan glow utilities ───────────────────────────────── */
+.glow-cy { text-shadow: 0 0 8px var(--color-cy-glow), 0 0 20px rgba(0,212,255,.12); }
+.glow-mg { text-shadow: 0 0 8px var(--color-mg-glow), 0 0 20px rgba(212,0,255,.10); }
 
 .glow-box {
-  box-shadow: 0 0 0 1px var(--color-ph-border),
-              inset 0 0 30px rgba(0,255,65,.03);
+  box-shadow: 0 0 0 1px var(--color-cy-border),
+              inset 0 0 30px rgba(0,212,255,.02);
 }
-
+.glow-box-hover {
+  transition: border-color .2s, box-shadow .2s;
+}
 .glow-box-hover:hover {
-  box-shadow: 0 0 0 1px rgba(0,255,65,.4),
-              0 0 24px rgba(0,255,65,.08),
-              inset 0 0 40px rgba(0,255,65,.04);
-  transition: box-shadow .2s ease;
+  box-shadow: 0 0 0 1px rgba(0,212,255,.35),
+              0 0 24px rgba(0,212,255,.07);
 }
 
-/* ── Scanline overlay (subtle retro feel) ───────────────── */
+/* Scanline retro overlay */
 .scanlines::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+  content: ''; position: absolute; inset: 0;
   background: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,.04) 2px,
-    rgba(0,0,0,.04) 4px
+    to bottom, transparent, transparent 2px, rgba(0,0,0,.04) 2px, rgba(0,0,0,.04) 4px
   );
-  pointer-events: none;
-  border-radius: inherit;
-  z-index: 1;
+  pointer-events: none; border-radius: inherit; z-index: 1;
 }
 
-/* ── Blinking cursor animation ──────────────────────────── */
+/* Blink cursor */
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 .cursor::after { content:'_'; animation: blink 1s step-end infinite; }

@@ -19,7 +19,7 @@ export function drawStats() {
     const matchInfo = m ? `${m.a} ${m.sa}-${m.sb} ${m.b}` : '';
     return `<div class="strw" onclick="openRecordMatch(${idx},'${m ? m.a : ''}','${m ? m.b : ''}')"><div>` +
       `<div class="stv">${val}</div><div class="std">${lbl}${sub ? ' · ' + sub : ''}</div>` +
-      (matchInfo ? `<div style="font-size:11px;color:#3b82f6;margin-top:2px">${matchInfo}</div>` : '') +
+      (matchInfo ? `<div style="font-size:11px;color:#9b74ff;margin-top:2px">${matchInfo}</div>` : '') +
       `</div><span style="color:#aaa;font-size:16px">→</span></div>`;
   }
 
@@ -69,7 +69,7 @@ export function drawStats() {
     `<div class="stgc"><div class="stgch">Group Qualifying</div><div class="stgcb">` +
     allTeams().sort((a, b) => advPct(b.name) - advPct(a.name)).slice(0, 8).map(t =>
       `<div class="strw" onclick="goJourney('${t.name}')">` +
-      `<div style="display:flex;align-items:center;gap:6px"><span>${t.flag}</span>${t.name}</div>` +
+      `<div style="display:flex;align-items:center;gap:6px">${flag(t.name)}${t.name}</div>` +
       `<span style="font-weight:700">${advPct(t.name).toFixed(1)}%</span></div>`
     ).join('') +
     `</div></div>` +

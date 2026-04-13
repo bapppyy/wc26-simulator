@@ -45,7 +45,7 @@ export function filterByMatchup(tA, tB, rnd) {
   document.getElementById('fTeam').value = tA;
   document.getElementById('fStage').value = '';
   document.getElementById('fCount').innerHTML =
-    `<b>${state.filtered.length}</b> sims — <span style="color:#3b82f6;font-weight:600">${flag(tA)}${tA} vs ${flag(tB)}${tB} · ${rnd}</span>`;
+    `<b>${state.filtered.length}</b> sims — <span style="color:#9b74ff;font-weight:600">${flag(tA)}${tA} vs ${flag(tB)}${tB} · ${rnd}</span>`;
   renderList();
   window.nav('browser', true);
 }
@@ -72,7 +72,7 @@ export function renderList() {
     if (_muf) {
       const prop = { R32: 'r32', R16: 'r16', QF: 'qf', SF: 'sf', Final: 'fin' }[_muf.rnd];
       const mm = prop && s[prop] ? s[prop].find(m => m && ((m.a === _muf.a && m.b === _muf.b) || (m.a === _muf.b && m.b === _muf.a))) : null;
-      if (mm) mu = ` <span style="color:#3b82f6;font-size:11px">${mm.a} ${scoreStr(mm)} ${mm.b}</span>`;
+      if (mm) mu = ` <span style="color:#9b74ff;font-size:11px">${mm.a} ${scoreStr(mm)} ${mm.b}</span>`;
     }
 
     const row = document.createElement('div');
@@ -139,7 +139,7 @@ export function showDetail(s, focusTeam) {
     html += `<div class="gc"><div class="gch">Group ${gk}</div>`;
     gr.forEach((t, i) => html +=
       `<div class="gr" style="${i < 2 ? 'font-weight:500' : 'color:#888'}">` +
-      `<span class="gn">${i + 1}</span><div class="gtm"><span>${flag(t.name)}</span><span${focusTeam === t.name ? " style='color:#3b82f6'" : ' '}>${t.name}</span></div>` +
+      `<span class="gn">${i + 1}</span><div class="gtm"><span>${flag(t.name)}</span><span${focusTeam === t.name ? " style='color:#9b74ff'" : ' '}>${t.name}</span></div>` +
       `<span class="num">${t.gf}</span><span class="num">${t.ga}</span>` +
       `<span class="num">${t.gf - t.ga > 0 ? '+' : ''}${t.gf - t.ga}</span><span class="num b">${t.pts}</span></div>`
     );
@@ -155,9 +155,9 @@ export function showDetail(s, focusTeam) {
       const wA = m.w === m.a;
       const sub = m.pen ? ' pen.' + m.penA + '-' + m.penB : m.et ? ' ET' : '';
       h += `<div class="dmatch" onclick="openReportMatch(${s.idx},'${m.a}','${m.b}')" style="cursor:pointer">` +
-        `<div style="font-weight:${wA ? 700 : 400};color:${wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.a ? " style='color:#3b82f6;font-weight:700'" : ''}>${flag(m.a)}${m.a}</div>` +
+        `<div style="font-weight:${wA ? 700 : 400};color:${wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.a ? " style='color:#9b74ff;font-weight:700'" : ''}>${flag(m.a)}${m.a}</div>` +
         `<div style="text-align:center;font-weight:700;font-size:13px">${m.sa}–${m.sb}<span style="font-size:10px;color:#aaa;font-weight:400">${sub}</span></div>` +
-        `<div style="text-align:right;font-weight:${!wA ? 700 : 400};color:${!wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.b ? " style='color:#3b82f6;font-weight:700'" : ''}>${m.b}${flag(m.b)}</div></div>`;
+        `<div style="text-align:right;font-weight:${!wA ? 700 : 400};color:${!wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.b ? " style='color:#9b74ff;font-weight:700'" : ''}>${m.b}${flag(m.b)}</div></div>`;
     }
     return h + `</div>`;
   }
@@ -168,9 +168,9 @@ export function showDetail(s, focusTeam) {
     for (const m of ms) {
       const wA = m.sa > m.sb;
       html += `<div class="dmatch" onclick="openReportMatch(${s.idx},'${m.a}','${m.b}')" style="cursor:pointer"><span style="font-size:10px;color:#aaa">G${gk}</span>` +
-        `<div style="font-weight:${wA ? 700 : 400};color:${wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.a ? " style='color:#3b82f6;font-weight:700'" : ''}>${flag(m.a)}${m.a}</div>` +
+        `<div style="font-weight:${wA ? 700 : 400};color:${wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.a ? " style='color:#9b74ff;font-weight:700'" : ''}>${flag(m.a)}${m.a}</div>` +
         `<div style="text-align:center;font-weight:700">${m.sa}–${m.sb}</div>` +
-        `<div style="text-align:right;font-weight:${!wA && m.sa !== m.sb ? 700 : 400};color:${!wA && m.sa !== m.sb ? '#1a1a1a' : '#bbb'}"${focusTeam === m.b ? " style='color:#3b82f6;font-weight:700'" : ''}>${m.b}${flag(m.b)}</div></div>`;
+        `<div style="text-align:right;font-weight:${!wA && m.sa !== m.sb ? 700 : 400};color:${!wA && m.sa !== m.sb ? '#1a1a1a' : '#bbb'}"${focusTeam === m.b ? " style='color:#9b74ff;font-weight:700'" : ''}>${m.b}${flag(m.b)}</div></div>`;
     }
   }
   html += `</div>`;

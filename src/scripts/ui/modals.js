@@ -52,22 +52,22 @@ export function openMatchModal(m, rnd, simIdx) {
     let ico = "", cls = "", txt = "";
     if (ev.type === "goal") {
       ico = "⚽"; cls = "ig";
-      txt = `<b>${ev.flag}${ev.team}</b> — ⚽ ${ev.scorer}${ev.assister ? ` <span class="evs">🅰 ${ev.assister}</span>` : ""}${ev.et ? ` <span class="evs">(AET)</span>` : ""}`;
+      txt = `<b>${flag(ev.team)}</b> — ⚽ ${ev.scorer}${ev.assister ? ` <span class="evs">🅰 ${ev.assister}</span>` : ""}${ev.et ? ` <span class="evs">(AET)</span>` : ""}`;
     } else if (ev.type === "yellow") {
       ico = "🟨"; cls = "iy";
-      txt = `<b>${ev.flag}${ev.team}</b> — ${ev.player}`;
+      txt = `<b>${flag(ev.team)}</b> — ${ev.player}`;
     } else if (ev.type === "red") {
       ico = "🟥"; cls = "ir";
-      txt = `<b>${ev.flag}${ev.team}</b> — ${ev.player} <span class="evs">Red card</span>`;
+      txt = `<b>${flag(ev.team)}</b> — ${ev.player} <span class="evs">Red card</span>`;
     } else if (ev.type === "susp") {
       ico = "⚠"; cls = "ir";
-      txt = `<b>${ev.flag}${ev.team}</b> — ${ev.player} <span class="evs">${ev.reason}</span>`;
+      txt = `<b>${flag(ev.team)}</b> — ${ev.player} <span class="evs">${ev.reason}</span>`;
     } else if (ev.type === "sub") {
       ico = "🔄"; cls = "is";
-      txt = `<b>${ev.flag}${ev.team}</b> — Out: ${ev.out} → In: <b>${ev.in}</b>${ev.inOvr ? ` (${ev.inOvr})` : ""}  <span class="evs">Tactical</span>`;
+      txt = `<b>${flag(ev.team)}</b> — Out: ${ev.out} → In: <b>${ev.in}</b>${ev.inOvr ? ` (${ev.inOvr})` : ""}  <span class="evs">Tactical</span>`;
     } else if (ev.type === "injury") {
       ico = "🤕"; cls = "ii";
-      txt = `<b>${ev.flag}${ev.team}</b> — ${ev.player} <span class="evs">injured</span>`;
+      txt = `<b>${flag(ev.team)}</b> — ${ev.player} <span class="evs">injured</span>`;
     } else if (ev.type === "pen") {
       ico = "P"; cls = "ig";
       txt = `Penalty shootout: ${ev.team} wins ${ev.penA}-${ev.penB}`;

@@ -3,6 +3,7 @@
 
 import { flag, allTeams } from '../../lib/engine.js';
 import { state, advPct, pBar } from '../state.js';
+import { obHighlight } from '../onboarding.js';
 
 export function drawMonte() {
   const { STATS } = state;
@@ -76,14 +77,14 @@ export function drawStageTable() {
     const tr = document.createElement('tr');
     tr.onclick = () => window.goJourney(r.name);
     tr.innerHTML =
-      `<td><div class="tcl"><span>${r.flag}</span>${r.name}</div></td>` +
+      `<td><div class="tcl">${flag(r.name)}${r.name}</div></td>` +
       `<td class="num"><span class="gb">${r.group}</span></td>` +
       `<td class="num">${pBar(r.adv, mAdv, '#f59e0b')}</td>` +
-      `<td class="num">${pBar(r.r16, mR16, '#3b82f6')}</td>` +
+      `<td class="num">${pBar(r.r16, mR16, '#9b74ff')}</td>` +
       `<td class="num">${pBar(r.qf,  mQF,  '#8b5cf6')}</td>` +
       `<td class="num">${pBar(r.sf,  mSF,  '#ec4899')}</td>` +
       `<td class="num">${pBar(r.fin, mFin, '#f97316')}</td>` +
-      `<td class="num">${pBar(r.champ, mCh, '#22c55e')}</td>`;
+      `<td class="num">${pBar(r.champ, mCh, '#00c4ff')}</td>`;
     tbody.appendChild(tr);
   });
 }
@@ -92,4 +93,5 @@ export function srtS(k) {
   if (state.stageSortK === k) state.stageSortD *= -1;
   else { state.stageSortK = k; state.stageSortD = k === 'group' ? 1 : -1; }
   drawStageTable();
+  obHighlight(); // re-apply selected team highlight after sort rebuild
 }

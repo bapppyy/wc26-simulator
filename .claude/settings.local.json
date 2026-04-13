@@ -3,7 +3,11 @@
     "allow": [
       "Bash(wc -l \"C:/Users/bplt_/Desktop/wc26sim/src/lib/\"*.js)",
       "Bash(npm run:*)",
-      "Bash(del:*)"
+      "Bash(del:*)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\(JSON.stringify\\(p.dependencies,null,2\\)\\)\")",
+      "Bash(npm install:*)",
+      "Bash(node -e \" const fs = require\\('fs'\\); const src = fs.readFileSync\\('src/lib/data.js', 'utf8'\\); // Find all quoted keys before :{ const re = /\\\\\"\\([^\\\\\"]+\\)\\\\\":\\\\s*\\\\{/g; let m, names=new Set\\(\\); while\\(\\(m=re.exec\\(src\\)\\)!==null\\) { if\\(m[1].length > 1 && !['g','f','df','mf','fw','ovr','p'].includes\\(m[1]\\)\\) names.add\\(m[1]\\); } const arr = Array.from\\(names\\); console.log\\('Keys:', arr.length\\); console.log\\(arr.join\\('\\\\n'\\)\\); \")",
+      "Bash(node:*)"
     ]
   }
 }

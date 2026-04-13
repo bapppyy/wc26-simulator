@@ -65,8 +65,9 @@ export function wPick(arr, ws) {
   return arr[arr.length - 1];
 }
 
-/** Returns the emoji flag for a team name. */
-export function flag(n) { return DATA[n]?.f || '🏴'; }
+/** Returns a round SVG flag HTML string for a team name. */
+import { flagHtml } from './flagSvg.js';
+export function flag(n) { return flagHtml(n, DATA[n]?.f || '🏴'); }
 
 /** Returns all teams sorted by OVR descending, shaped for UI consumption. */
 export function allTeams() {

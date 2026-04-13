@@ -40,7 +40,7 @@ export function drawVote() {
       // Sliders
       const sls = document.createElement('div');
       sls.className = 'vote-sliders';
-      const fields = [['DF', Math.round(d.df), '#3b82f6'], ['MF', Math.round(d.mf), '#8b5cf6'], ['FW', Math.round(d.fw), '#f59e0b']];
+      const fields = [['DF', Math.round(d.df), '#9b74ff'], ['MF', Math.round(d.mf), '#8b5cf6'], ['FW', Math.round(d.fw), '#f59e0b']];
 
       for (const [fname, fval, fcol] of fields) {
         const row = document.createElement('div'); row.className = 'vote-sl-row';

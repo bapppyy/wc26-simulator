@@ -2,21 +2,21 @@
 ---
 <div id="pMonte" class="pane on">
   <div id="cbanner"></div>
-  <div class="sec">Championship Probabilities — click → go to sim browser</div>
+  <div class="sec" data-i18n="monte.champSection">Championship Probabilities - click to go to sim browser</div>
   <div class="mcg" id="mcGrid"></div>
-  <div class="sec" style="margin-top:22px">All Stages — click header to sort · click row for journey</div>
+  <div class="sec" style="margin-top:22px" data-i18n="monte.stagesSection">All Stages - click header to sort - click row for journey</div>
   <div style="overflow-x:auto">
     <table class="stbl" id="stageTable">
       <thead>
         <tr>
-          <th onclick="srtS('name')">Team</th>
-          <th class="num" onclick="srtS('group')" style="cursor:pointer">Group ↕</th>
-          <th class="num" onclick="srtS('adv')">Grp.Qual</th>
-          <th class="num" onclick="srtS('r16')">R16</th>
-          <th class="num" onclick="srtS('qf')">QF</th>
-          <th class="num" onclick="srtS('sf')">SF</th>
-          <th class="num" onclick="srtS('fin')">Final</th>
-          <th class="num" onclick="srtS('champ')">Champion</th>
+          <th onclick="srtS('name')" data-i18n="monte.team">Team</th>
+          <th class="num" onclick="srtS('group')" style="cursor:pointer" data-i18n="monte.group">Group</th>
+          <th class="num" onclick="srtS('adv')" data-i18n="monte.grpQual">Grp.Qual</th>
+          <th class="num" onclick="srtS('r16')" data-i18n="monte.r16">R16</th>
+          <th class="num" onclick="srtS('qf')" data-i18n="monte.qf">QF</th>
+          <th class="num" onclick="srtS('sf')" data-i18n="monte.sf">SF</th>
+          <th class="num" onclick="srtS('fin')" data-i18n="monte.final">Final</th>
+          <th class="num" onclick="srtS('champ')" data-i18n="monte.champion">Champion</th>
         </tr>
       </thead>
       <tbody id="stageBody"></tbody>

@@ -123,10 +123,10 @@ export function showJourney() {
       `<div class="jfxs"><div class="jfxsb">${myG.toFixed(1)}–${opG.toFixed(1)}</div><div style="font-size:10px;color:#aaa">avg. score</div></div>` +
       `<div style="text-align:right;font-size:13px;color:#aaa">${opp} ${flag(opp)}</div></div>` +
       `<div class="jfxw">` +
-      `<div style="flex:${myW};background:#3b82f6;border-radius:2px 0 0 2px"></div>` +
+      `<div style="flex:${myW};background:#9b74ff;border-radius:2px 0 0 2px"></div>` +
       `<div style="flex:${dr};background:#e5e5e0"></div>` +
       `<div style="flex:${opW};background:#f59e0b;border-radius:0 2px 2px 0"></div></div>` +
-      `<div class="jfxo"><span style="color:#3b82f6">${name} ${(myW * 100).toFixed(0)}%</span>` +
+      `<div class="jfxo"><span style="color:#9b74ff">${name} ${(myW * 100).toFixed(0)}%</span>` +
       `<span>Draw ${(dr * 100).toFixed(0)}%</span><span style="color:#f59e0b">${opp} ${(opW * 100).toFixed(0)}%</span></div>` +
       `<div class="jfxst">` +
       `<div class="jfxs2"><div class="jfxsl">Exp. Points</div><div class="jfxsv">${(myW * 3 + dr).toFixed(2)}</div></div>` +
@@ -199,13 +199,13 @@ export function showJourney() {
           `<td><span style="margin-right:3px">${flag(opp)}</span><span style="font-weight:500">${opp}</span></td>` +
           // Col 2 — match-ups: fixed-width bar (.j-bar) + encounter %
           `<td><div style="display:flex;align-items:center;gap:3px">` +
-            `<div class="j-bar"><div style="height:100%;border-radius:2px;background:#3b82f6;width:${Math.round(data.enc / maxEnc * 100)}%"></div></div>` +
-            `<span style="color:#3b82f6;font-weight:700">${encPct.toFixed(1)}%</span>` +
+            `<div class="j-bar"><div style="height:100%;border-radius:2px;background:#9b74ff;width:${Math.round(data.enc / maxEnc * 100)}%"></div></div>` +
+            `<span style="color:#9b74ff;font-weight:700">${encPct.toFixed(1)}%</span>` +
           `</div></td>` +
           // Col 3 — win-rate: fixed-width bar (.j-bar) + win %
           `<td><div style="display:flex;align-items:center;gap:3px">` +
-            `<div class="j-bar"><div style="height:100%;border-radius:2px;background:#22c55e;width:${winPct.toFixed(1)}%"></div></div>` +
-            `<span style="color:#22c55e;font-weight:700">${winPct.toFixed(1)}%</span>` +
+            `<div class="j-bar"><div style="height:100%;border-radius:2px;background:#00c4ff;width:${winPct.toFixed(1)}%"></div></div>` +
+            `<span style="color:#00c4ff;font-weight:700">${winPct.toFixed(1)}%</span>` +
           `</div></td>` +
           // Col 4 — W/L (wins − losses)
           `<td>${data.wins}–${data.enc - data.wins}</td>`;
@@ -258,7 +258,7 @@ export function showJourney() {
       'display:flex;justify-content:space-between;align-items:center';
     totalLine.innerHTML =
       `<span>${_champD['champ.total'] || 'Total championships:'} ${champCnt}</span>` +
-      `<span style="font-size:11px;color:#3b82f6;font-weight:600">${_champD['champ.viewall'] || 'View all →'}</span>`;
+      `<span style="font-size:11px;color:#9b74ff;font-weight:600">${_champD['champ.viewall'] || 'View all →'}</span>`;
     box.appendChild(totalLine);
 
     // Per-opponent chips — each opens a filtered list for that specific opponent
@@ -284,7 +284,7 @@ export function showJourney() {
           'border-radius:6px;border:1px solid #e5e5e0;transition:background .15s';
         chip.innerHTML =
           `${flag(opp)}<span style="font-weight:600">${opp}</span>` +
-          `<span style="color:#3b82f6;font-weight:700;margin-left:2px">(${d.wins})</span>`;
+          `<span style="color:#9b74ff;font-weight:700;margin-left:2px">(${d.wins})</span>`;
         chip.onmouseenter = () => { chip.style.background = '#ebf3ff'; chip.style.borderColor = '#93c5fd'; };
         chip.onmouseleave = () => { chip.style.background = ''; chip.style.borderColor = '#e5e5e0'; };
         const _opp = opp;
@@ -296,6 +296,18 @@ export function showJourney() {
 
     el.appendChild(box);
   }
+
+  // ── Patreon support link at bottom of Journey view ──────────────────────────
+  const patronDiv = document.createElement('div');
+  patronDiv.style.cssText =
+    'margin-top:24px;padding:12px 16px;border:1px dashed #e0e0e0;border-radius:10px;' +
+    'text-align:center;font-size:11px;color:#aaa';
+  patronDiv.innerHTML =
+    `Enjoying the simulator? ` +
+    `<a href="https://www.patreon.com/c/BapLab" target="_blank" rel="noopener noreferrer" ` +
+    `style="color:#00c4ff;font-weight:600;text-decoration:none">Support BapLab on Patreon</a> ` +
+    `to fuel the next generation of simulations.`;
+  el.appendChild(patronDiv);
 }
 
 // ── Championship sim-list modal ────────────────────────────────────────────────
@@ -359,7 +371,7 @@ function openChampModal(team, vsOpp = null) {
       info.style.cssText = 'font-size:12px;font-weight:600;flex:1;min-width:0';
       info.innerHTML =
         `🏆 vs. ${flag(oppName)}${oppName}` +
-        (fin ? ` <span style="color:#22c55e;font-size:11px">${tScore}–${oScore}</span>` : '');
+        (fin ? ` <span style="color:#00c4ff;font-size:11px">${tScore}–${oScore}</span>` : '');
 
       const hint = document.createElement('span');
       hint.style.cssText = 'font-size:11px;color:#bbb;flex-shrink:0';
@@ -419,11 +431,11 @@ function openOppModal(team, opp, round, data, n) {
     // Win-rate bar
     `<div>` +
     `<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:6px">` +
-    `<span style="color:#3b82f6">${team} ${winPct}%</span>` +
+    `<span style="color:#9b74ff">${team} ${winPct}%</span>` +
     `<span style="color:#f59e0b">${opp} ${lossPct}%</span>` +
     `</div>` +
     `<div style="display:flex;gap:3px;height:8px;border-radius:4px;overflow:hidden;background:#f0f0ee">` +
-    `<div style="flex:${data.wins};background:#3b82f6"></div>` +
+    `<div style="flex:${data.wins};background:#9b74ff"></div>` +
     `<div style="flex:${data.enc - data.wins};background:#f59e0b"></div>` +
     `</div>` +
     `</div>` +
@@ -431,8 +443,8 @@ function openOppModal(team, opp, round, data, n) {
     // Stats grid
     `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">` +
     statBox('Encounters', data.enc, '#6366f1') +
-    statBox('Wins', data.wins, '#22c55e') +
-    statBox('Win %', winPct + '%', '#3b82f6') +
+    statBox('Wins', data.wins, '#00c4ff') +
+    statBox('Win %', winPct + '%', '#9b74ff') +
     `</div>` +
 
     // Match list placeholder
@@ -490,7 +502,7 @@ function openOppModal(team, opp, round, data, n) {
         const teamWon  = m.w === team;
         const teamLost = m.w !== team && m.w !== null && m.w !== undefined;
         const badgeCfg = teamWon
-          ? { text: 'W', bg: '#dcfce7', color: '#16a34a' }
+          ? { text: 'W', bg: '#dcfce7', color: '#0090d4' }
           : teamLost
             ? { text: 'L', bg: '#fef3c7', color: '#d97706' }
             : { text: 'D', bg: '#f0f0ee', color: '#666' };
