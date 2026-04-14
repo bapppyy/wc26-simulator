@@ -276,8 +276,8 @@ export function showJourney() {
         chip.innerHTML =
           `${flag(opp)}<span style="font-weight:600">${opp}</span>` +
           `<span style="color:#9b74ff;font-weight:700;margin-left:2px">(${d.wins})</span>`;
-        const _opp = opp;
-        chip.onclick = e => { e.stopPropagation(); openChampModal(name, _opp); };
+        const _opp = opp; const _d = d;
+        chip.onclick = e => { e.stopPropagation(); openOppModal(name, _opp, 'Final', _d, n); };
         oppLine.appendChild(chip);
       }
       box.appendChild(oppLine);
@@ -371,9 +371,9 @@ function openChampModal(team, vsOpp = null) {
       row.appendChild(hint);
 
       const _idx = s.idx;
+      const _fin = s.fin && s.fin[0];
       row.onclick = () => {
-        document.getElementById('modal').style.display = 'none';
-        window.openSimById(_idx);
+        if (_fin) openMatchFromOppModal(_idx, _fin.a, _fin.b, 'Final');
       };
       scroll.appendChild(row);
     });

@@ -330,8 +330,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dark .annex-panel{background:#1e1e1e;border-color:#2a2a2a}
 .dark .annex-item{background:#1a1a1a}
 /* Modals */
-.dark .modal{background:#1e1e1e}
-.dark .mhdr{background:#1e1e1e;border-bottom-color:#2a2a2a}
+.dark .modal{background:#1e1e1e !important;color:#f0f0ee !important}
+.dark .mhdr{background:#1e1e1e !important;border-bottom-color:#2a2a2a;color:#f0f0ee !important}
+.dark .mbdy{color:#f0f0ee !important}
 .dark .xb:hover{color:#f0f0ee}
 .dark .mhero{border-bottom-color:#2a2a2a}
 .dark .xic{background:#1a1a1a;border-color:#2a2a2a}
@@ -379,16 +380,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dark .btn.pr{background:#0891b2;color:#fff;border-color:#0e7490}
 .dark .btn.pr:hover{background:#0e7490;border-color:#155e75}
 /* ── Highlight rows — force light text ─── */
-.dark .hl-row{background:#0d2030 !important;outline-color:#00c4ff;color:#e0f4ff !important}
-.dark .hl-row td{font-weight:600 !important;color:#e0f4ff !important}
-.dark .hl-gr{background:#0d2030 !important;outline-color:#00c4ff;color:#e0f4ff !important}
-.dark .hl-mc{background:#0d2030 !important;border-color:#00c4ff !important}
-.dark .hl-bm{background:#0d2030 !important;border-color:#00c4ff !important}
-.dark .hl-bt{font-weight:700;color:#7dd3fc !important}
-/* ── Fixture — make loser text legible ─── */
-.dark .mta.L,.dark .mtb.L{color:#777}
+.dark .hl-row{background:#0d2030 !important;outline-color:#00c4ff;color:#f0f0ee !important}
+.dark .hl-row td{font-weight:600 !important;color:#f0f0ee !important}
+.dark .hl-gr{background:#0d2030 !important;outline-color:#00c4ff;color:#f0f0ee !important}
+.dark .hl-mc{background:#0d2030 !important;border-color:#00c4ff !important;color:#f0f0ee !important}
+.dark .hl-bm{background:#0d2030 !important;border-color:#00c4ff !important;color:#f0f0ee !important}
+.dark .hl-bt{font-weight:700;color:#f0f0ee !important}
+/* ── Fixture — make team names and scores legible ─── */
+.dark .mc{color:#e5e5e5 !important}
+.dark .mta,.dark .mtb{color:#e5e5e5 !important}
+.dark .mta.L,.dark .mtb.L{color:#e5e5e5 !important}
+.dark .scb{color:#e5e5e5 !important}
 /* ── Squads star player — readable amber text ─── */
-.dark .squad-star{border-color:#92400e;background:#1c1500;color:#fbbf24}
+.dark .squad-star{border-color:#92400e;background:#1c1500;color:#fbbf24 !important}
 /* ── Championship Summary box ─── */
 .champ-sum-box{background:#fff;border:1px solid #e5e5e0;border-radius:11px;padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:background .15s}
 .champ-sum-box:hover{background:#fafaf8}
