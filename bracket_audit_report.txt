@@ -1,0 +1,192 @@
+KNOCKOUT BRACKET AUDIT REPORT
+==============================
+Date: 2026-04-14
+Auditor: Claude (automated)
+Reference: Official FIFA 2026 structural blueprint (user-supplied)
+Source file: src/lib/constants.js  (R16_PAIRS, QF_PAIRS, SF_PAIRS)
+Engine file: src/lib/engine.js     (uses the pairs from constants.js)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SUMMARY
+-------
+  ✗  DEVIATION — Round of 16 (R16) pairing
+  ✗  DEVIATION — Quarter-Final (QF) pairing
+  ✓  MATCH     — Semi-Final (SF) pairing
+  ✓  MATCH     — Final
+
+Two out of four knockout rounds deviate from the official blueprint.
+The deviations affect every meaningful simulated bracket path.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENCODING CONVENTION
+--------------------
+R32 matches are indexed 0–15 (engine internal), corresponding to FIFA
+official match numbers M73–M88:
+
+  Engine index  →  FIFA match
+       0        →  M73     (1E vs 3x)
+       1        →  M74     (1I vs 3x)
+       2        →  M75     (2A vs 2B)
+       3        →  M76     (1F vs 2C)
+       4        →  M77     (2K vs 2L)
+       5        →  M78     (1H vs 2J)
+       6        →  M79     (1D vs 3x)
+       7        →  M80     (1G vs 3x)
+       8        →  M81     (1C vs 2F)
+       9        →  M82     (2E vs 2I)
+      10        →  M83     (2D vs 2G)
+      11        →  M84     (1J vs 2H)
+      12        →  M85     (1L vs 3x)
+      13        →  M86     (1B vs 3x)
+      14        →  M87     (1K vs 3x)
+      15        →  M88     (1A vs 3x)
+
+R16 matches are indexed 0–7 (engine internal), corresponding to FIFA
+official match numbers M89–M96.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ROUND OF 16 — DEVIATION
+---------------------------
+R16 match pairing is defined in constants.js as:
+
+  export const R16_PAIRS = [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]];
+
+Each pair [ia, ib] means: r32W[ia] plays r32W[ib] in R16.
+
+CURRENT CODE produces these matchups:
+  R16-1 (M89):  Winner M73 (idx 0)  vs  Winner M74 (idx 1)
+  R16-2 (M90):  Winner M75 (idx 2)  vs  Winner M76 (idx 3)
+  R16-3 (M91):  Winner M77 (idx 4)  vs  Winner M78 (idx 5)
+  R16-4 (M92):  Winner M79 (idx 6)  vs  Winner M80 (idx 7)
+  R16-5 (M93):  Winner M81 (idx 8)  vs  Winner M82 (idx 9)
+  R16-6 (M94):  Winner M83 (idx 10) vs  Winner M84 (idx 11)
+  R16-7 (M95):  Winner M85 (idx 12) vs  Winner M86 (idx 13)
+  R16-8 (M96):  Winner M87 (idx 14) vs  Winner M88 (idx 15)
+  → Pattern: CONSECUTIVE pairs (0↔1, 2↔3, …)
+
+OFFICIAL BLUEPRINT requires:
+  R16-1 (M89):  Winner M73 (idx 0)  vs  Winner M75 (idx 2)
+  R16-2 (M90):  Winner M74 (idx 1)  vs  Winner M76 (idx 3)
+  R16-3 (M91):  Winner M77 (idx 4)  vs  Winner M79 (idx 6)
+  R16-4 (M92):  Winner M78 (idx 5)  vs  Winner M80 (idx 7)
+  R16-5 (M93):  Winner M81 (idx 8)  vs  Winner M83 (idx 10)
+  R16-6 (M94):  Winner M82 (idx 9)  vs  Winner M84 (idx 11)
+  R16-7 (M95):  Winner M85 (idx 12) vs  Winner M87 (idx 14)
+  R16-8 (M96):  Winner M86 (idx 13) vs  Winner M88 (idx 15)
+  → Pattern: SKIP-ONE pairs (0↔2, 1↔3, 4↔6, 5↔7, …)
+
+REQUIRED FIX (constants.js line 7):
+  // CURRENT:
+  export const R16_PAIRS = [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]];
+
+  // CORRECTED per official blueprint:
+  export const R16_PAIRS = [[0,2],[1,3],[4,6],[5,7],[8,10],[9,11],[12,14],[13,15]];
+
+IMPACT: All R16 matchups change. Every bracket path from R16 onward
+is affected in all 495 Annex C scenarios.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. QUARTER-FINALS — DEVIATION
+------------------------------
+QF match pairing is defined in constants.js as:
+
+  export const QF_PAIRS = [[0,1],[2,3],[4,5],[6,7]];
+
+CURRENT CODE produces these matchups:
+  QF1 (M97):  Winner R16-1 (idx 0)  vs  Winner R16-2 (idx 1)
+  QF2 (M98):  Winner R16-3 (idx 2)  vs  Winner R16-4 (idx 3)
+  QF3 (M99):  Winner R16-5 (idx 4)  vs  Winner R16-6 (idx 5)
+  QF4 (M100): Winner R16-7 (idx 6)  vs  Winner R16-8 (idx 7)
+  → Pattern: CONSECUTIVE pairs (0↔1, 2↔3, …)
+
+OFFICIAL BLUEPRINT requires:
+  QF1 (M97):  Winner R16-1 (idx 0)  vs  Winner R16-3 (idx 2)
+  QF2 (M98):  Winner R16-2 (idx 1)  vs  Winner R16-4 (idx 3)
+  QF3 (M99):  Winner R16-5 (idx 4)  vs  Winner R16-7 (idx 6)
+  QF4 (M100): Winner R16-6 (idx 5)  vs  Winner R16-8 (idx 7)
+  → Pattern: SKIP-ONE pairs (0↔2, 1↔3, 4↔6, 5↔7)
+
+REQUIRED FIX (constants.js line 8):
+  // CURRENT:
+  export const QF_PAIRS = [[0,1],[2,3],[4,5],[6,7]];
+
+  // CORRECTED per official blueprint:
+  export const QF_PAIRS = [[0,2],[1,3],[4,6],[5,7]];
+
+IMPACT: All QF matchups change. SF and Final paths are consequently
+affected. Championship probabilities for all 48 teams will shift.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. SEMI-FINALS — COMPLIANT ✓
+------------------------------
+SF pairing in constants.js:
+
+  export const SF_PAIRS = [[0,1],[2,3]];
+
+CURRENT CODE produces:
+  SF1 (M101): Winner QF1 (idx 0)  vs  Winner QF2 (idx 1)
+  SF2 (M102): Winner QF3 (idx 2)  vs  Winner QF4 (idx 3)
+
+OFFICIAL BLUEPRINT requires:
+  SF1: Winner QF1 vs Winner QF2
+  SF2: Winner QF3 vs Winner QF4
+
+STATUS: 100% COMPLIANT. No change needed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. FINAL — COMPLIANT ✓
+-----------------------
+The engine constructs the final in engine.js as:
+
+  if (sfW[0] && sfW[1]) { r = simMatch(sfW[0], sfW[1], ...); }
+
+This produces:
+  Final (M104): Winner SF1 vs Winner SF2
+
+OFFICIAL BLUEPRINT requires:
+  Final: Winner SF1 vs Winner SF2
+
+STATUS: 100% COMPLIANT. No change needed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5. ADDITIONAL NOTES
+--------------------
+a) Same-group avoidance in R32 (Annex C):
+   Previously verified — 0 violations across all 3,960 checked
+   assignments in all 495 ANNEX_C scenarios. Compliant.
+
+b) Third-place play-off:
+   Engine correctly plays sfL[0] vs sfL[1] (both SF losers). ✓
+
+c) R32 null-pair handling:
+   When Annex C produces an undefined third-place slot, the engine
+   gracefully pushes null and skips that match. ✓
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RECOMMENDED PATCH (constants.js)
+----------------------------------
+Replace lines 7–8 with:
+
+  export const R16_PAIRS = [[0,2],[1,3],[4,6],[5,7],[8,10],[9,11],[12,14],[13,15]];
+  export const QF_PAIRS  = [[0,2],[1,3],[4,6],[5,7]];
+
+No other files need changing — engine.js reads these constants
+directly and the bracket/journey/browser UI all derive from the
+engine output, so they will automatically reflect the corrected paths.
+
+IMPORTANT CAVEAT: This audit uses the blueprint provided in the task
+description as ground truth. The current consecutive-pair logic is
+also a plausible interpretation of a standard single-elimination
+bracket. Before applying the patch, confirm against the official FIFA
+2026 bracket PDF/diagram to ensure the skip-one interpretation is
+correct. The two interpretations differ in which specific teams from
+each "pod" of four R32 matches are placed on the same side of the
+bracket.

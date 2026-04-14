@@ -42,7 +42,8 @@ export function drawVote() {
       // Sliders
       const sls = document.createElement('div');
       sls.className = 'vote-sliders';
-      const fields = [['DF', Math.round(d.df), '#9b74ff'], ['MF', Math.round(d.mf), '#8b5cf6'], ['FW', Math.round(d.fw), '#f59e0b']];
+      // DF = Cyan, MF = Purple, FW = Emerald
+      const fields = [['DF', Math.round(d.df), '#0891b2'], ['MF', Math.round(d.mf), '#9b74ff'], ['FW', Math.round(d.fw), '#10b981']];
 
       for (const [fname, fval, fcol] of fields) {
         const row = document.createElement('div'); row.className = 'vote-sl-row';
@@ -63,9 +64,6 @@ export function drawVote() {
       const resetBtn = document.createElement('button');
       resetBtn.className = 'vote-reset';
       resetBtn.textContent = 'Reset';
-      resetBtn.style.cssText = 'font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#888;font-family:inherit';
-      resetBtn.onmouseover = () => { resetBtn.style.background = '#f0f0ee'; };
-      resetBtn.onmouseout  = () => { resetBtn.style.background = '#fff'; };
 
       (function(tname, tSafeId, tBtn, tReset, initDf, initMf, initFw) {
         tBtn.addEventListener('click', function() {

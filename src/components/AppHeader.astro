@@ -9,6 +9,24 @@
       <span id="obBadgeFlag"></span><span id="obBadgeName"></span><span style="color:#aaa;font-size:11px">↺</span>
     </button>
     <button id="obSelectBtn" class="ob-badge" onclick="obOpen()" data-i18n="header.selectTeam" style="font-size:12px;padding:4px 10px">Select Team</button>
+    <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <!-- Moon icon — shown in light mode; click to activate dark -->
+      <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <!-- Sun icon — shown in dark mode; click to activate light -->
+      <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1"  x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22"  x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1"  y1="12" x2="3"  y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </button>
     <select id="langSel" class="sel" style="font-size:12px;padding:4px 6px" aria-label="Language">
       <option value="en">🌐 English</option>
       <option value="es">🌐 Español</option>
@@ -73,5 +91,60 @@
     document.addEventListener('DOMContentLoaded', initLang);
   } else {
     initLang();
+  }
+
+  // ── Dark / Light mode toggle ───────────────────────────────────────────────
+  // Default: system preference (prefers-color-scheme: dark).
+  // Manual override stored in localStorage as 'wc26_theme' = 'dark' | 'light'.
+  // Applies/removes the '.dark' class on <html>.
+
+  function applyTheme(dark: boolean) {
+    const html = document.documentElement;
+    if (dark) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+    // Swap Sun/Moon icons
+    const moon = document.getElementById('iconMoon');
+    const sun  = document.getElementById('iconSun');
+    if (moon) moon.style.display = dark ? 'none'   : '';
+    if (sun)  sun.style.display  = dark ? ''       : 'none';
+  }
+
+  function initTheme() {
+    const stored = localStorage.getItem('wc26_theme');
+    let dark: boolean;
+    if (stored === 'dark') {
+      dark = true;
+    } else if (stored === 'light') {
+      dark = false;
+    } else {
+      // No stored preference — use system default
+      dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    applyTheme(dark);
+
+    const btn = document.getElementById('themeToggle');
+    btn?.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      const next = !isDark;
+      localStorage.setItem('wc26_theme', next ? 'dark' : 'light');
+      applyTheme(next);
+    });
+
+    // React to OS-level changes only when no manual override is stored
+    window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', (e) => {
+        if (!localStorage.getItem('wc26_theme')) {
+          applyTheme(e.matches);
+        }
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTheme);
+  } else {
+    initTheme();
   }
 </script>

@@ -244,19 +244,13 @@ export function showJourney() {
 
     // Whole box: click → list all championship sims
     const box = document.createElement('div');
-    box.style.cssText =
-      'background:#fff;border:1px solid #e5e5e0;border-radius:11px;padding:14px 16px;' +
-      'margin-bottom:8px;cursor:pointer;transition:background .15s';
-    box.onmouseenter = () => { box.style.background = '#fafaf8'; };
-    box.onmouseleave = () => { box.style.background = '#fff'; };
+    box.className = 'champ-sum-box';
     box.onclick = () => openChampModal(name);
 
     // Header row: total count + "View all" hint
     const _champD = _cd();
     const totalLine = document.createElement('div');
-    totalLine.style.cssText =
-      'font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px;' +
-      'display:flex;justify-content:space-between;align-items:center';
+    totalLine.className = 'champ-sum-title';
     totalLine.innerHTML =
       `<span>${_champD['champ.total'] || 'Total championships:'} ${champCnt}</span>` +
       `<span style="font-size:11px;color:#9b74ff;font-weight:600">${_champD['champ.viewall'] || 'View all →'}</span>`;
@@ -269,25 +263,19 @@ export function showJourney() {
 
     if (finalOpps.length) {
       const oppLine = document.createElement('div');
-      oppLine.style.cssText =
-        'font-size:12px;color:#555;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center';
+      oppLine.className = 'champ-sum-opps';
 
       const lbl = document.createElement('span');
-      lbl.style.cssText =
-        'font-size:11px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0';
+      lbl.className = 'champ-sum-lbl';
       lbl.textContent = _champD['champ.finalsvs'] || 'Finals won vs.';
       oppLine.appendChild(lbl);
 
       for (const [opp, d] of finalOpps) {
         const chip = document.createElement('span');
-        chip.style.cssText =
-          'display:inline-flex;align-items:center;gap:3px;padding:3px 8px;' +
-          'border-radius:6px;border:1px solid #e5e5e0;transition:background .15s';
+        chip.className = 'champ-chip';
         chip.innerHTML =
           `${flag(opp)}<span style="font-weight:600">${opp}</span>` +
           `<span style="color:#9b74ff;font-weight:700;margin-left:2px">(${d.wins})</span>`;
-        chip.onmouseenter = () => { chip.style.background = '#ebf3ff'; chip.style.borderColor = '#93c5fd'; };
-        chip.onmouseleave = () => { chip.style.background = ''; chip.style.borderColor = '#e5e5e0'; };
         const _opp = opp;
         chip.onclick = e => { e.stopPropagation(); openChampModal(name, _opp); };
         oppLine.appendChild(chip);

@@ -22,6 +22,16 @@ import CryptoModal from '../../components/modals/CryptoModal.astro';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
 
+    <!-- Dark mode FOUC prevention: apply .dark before first paint -->
+    <script>
+      (function(){
+        var s = localStorage.getItem('wc26_theme');
+        if (s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -40,6 +50,28 @@ import CryptoModal from '../../components/modals/CryptoModal.astro';
     <meta property="og:description" content="Run thousands of 2026 FIFA World Cup simulations. 48 teams, 1,104 players, Annex C bracket logic, and full match events every sim." />
     <meta property="og:image"       content="https://baplab.net/og-image.png" />
     <meta name="twitter:card"       content="summary_large_image" />
+
+    <!-- Hreflang — i18n language alternates -->
+    <link rel="alternate" hreflang="tr"        href="https://baplab.net/tr/simulator" />
+    <link rel="alternate" hreflang="en"        href="https://baplab.net/en/simulator" />
+    <link rel="alternate" hreflang="x-default" href="https://baplab.net/en/simulator" />
+
+    <!-- Schema.org — SoftwareApplication structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "BapLab WC26 Simulator",
+      "applicationCategory": "SportsApplication",
+      "operatingSystem": "Web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Advanced data-driven Monte Carlo simulation and bracket predictor for the 2026 World Cup."
+    }
+    </script>
   </head>
   <body>
     <OnboardingModal />

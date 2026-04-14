@@ -239,3 +239,176 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .flag-ci{display:inline-block;width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;vertical-align:middle}
 .flag-em{display:inline;font-size:1em;line-height:1;vertical-align:middle}
 @media(max-width:600px){.ob-footer{flex-direction:column}.ob-rand,.ob-ok{width:100%;text-align:center}}
+
+/* ─── DARK MODE ────────────────────────────────────────────────────────────── */
+/* Activated by .dark on <html>. Toggled by AppHeader JS; defaults to system   */
+/* preference on first load; manual override stored in localStorage.            */
+
+.dark body{background:#111;color:#f0f0ee}
+.dark .phdr{border-bottom-color:#2a2a2a}
+.dark .nav{border-bottom-color:#2a2a2a}
+.dark .nb{color:#777}.dark .nb:hover{color:#f0f0ee}
+.dark .nb.on{color:#00c4ff;border-bottom-color:#00c4ff}
+.dark .sec{color:#666;border-bottom-color:#2a2a2a}
+.dark .sel{background:#1e1e1e;border-color:#333;color:#f0f0ee}
+.dark .btn{background:#1e1e1e;border-color:#333;color:#f0f0ee}
+.dark .btn:hover{background:#2a2a2a}
+/* Group cards */
+.dark .gc{background:#1e1e1e;border-color:#2a2a2a}
+.dark .gch{border-bottom-color:#2a2a2a}
+.dark .gch2{border-bottom-color:#222}
+.dark .gr{border-bottom-color:#222}.dark .gr:hover{background:#252525}
+.dark .gr.q1{background:#0d2018}.dark .gr.q2{background:#0d1e14}.dark .gr.q3{background:#1e1a08}
+.dark .num.b{color:#f0f0ee}
+.dark .gpwr{border-top-color:#222}
+/* Fixture */
+.dark .rl{border-bottom-color:#2a2a2a;color:#666}
+.dark .mc{background:#1e1e1e;border-color:#2a2a2a}.dark .mc:hover{background:#252525}
+
+.dark .sct{background:#222;color:#888}
+/* Bracket */
+.dark .bcol{border-right-color:#2a2a2a}
+.dark .bch{border-bottom-color:#2a2a2a;color:#666}
+.dark .bm{background:#1e1e1e;border-color:#2a2a2a}.dark .bm:hover{background:#252525}
+.dark .bt.L{color:#555}
+/* Monte / Stats tables */
+.dark .stbl th{background:#1e1e1e;border-bottom-color:#2a2a2a;color:#666}
+.dark .stbl th:hover{color:#f0f0ee}
+.dark .stbl tbody tr{border-bottom-color:#222}.dark .stbl tbody tr:hover td{background:#222}
+.dark .ptbl th{background:#1e1e1e;border-bottom-color:#2a2a2a;color:#666}
+.dark .ptbl tbody tr{border-bottom-color:#222}.dark .ptbl tbody tr:hover td{background:#222}
+.dark .pb,.dark .pbg{background:#2a2a2a}
+.dark .gb{background:#252525;color:#999}
+/* Sim browser */
+.dark .fbr{background:#1a1a1a;border-color:#2a2a2a}
+.dark .cbn{background:#1a1a1a;border-color:#2a2a2a}
+.dark .sr{background:#1e1e1e;border-color:#2a2a2a}.dark .sr:hover{background:#252525}
+.dark .dback{background:#1e1e1e;border-color:#333;color:#999}.dark .dback:hover{background:#2a2a2a}
+.dark .pgb{background:#1e1e1e;border-color:#333;color:#999}.dark .pgb:hover{background:#2a2a2a}
+.dark .dmatch{border-bottom-color:#222}
+/* Monte cards */
+.dark .mci{background:#1e1e1e;border-color:#2a2a2a}.dark .mci:hover{background:#252525}
+.dark .mcb{background:#0d2030}
+/* Power table */
+.dark .pw-inp{background:#1e1e1e;border-color:#333;color:#f0f0ee}
+.dark .pw-inp:focus{border-color:#3b82f6;background:#0d1a2e}
+.dark .pw-inp:hover{border-color:#555}
+.dark .pw-name-cell:hover{background:#252525}
+/* Journey */
+.dark .jh{background:#1a1a1a;border-color:#2a2a2a}
+.dark .jp b{color:#f0f0ee}
+.dark .stgw{background:#1e1e1e;border-color:#2a2a2a}
+.dark .stgh:hover{background:#252525}
+.dark .stgb{border-top-color:#222}
+.dark .sbg{background:#2a2a2a}
+.dark .sbf{background:#f0f0ee}
+.dark .j-table th{border-bottom-color:#2a2a2a}
+.dark .j-table td{border-bottom-color:#1e1e1e}
+.dark .j-table tbody tr:hover td{background:#222}
+.dark .j-bar{background:#2a2a2a}
+.dark .jfxc{background:#1e1e1e;border-color:#2a2a2a}
+.dark .jfxm{border-bottom-color:#222}
+.dark .jfxs2:not(:last-child){border-right-color:#222}
+.dark .jfxst{border-top-color:#222}
+/* Stats */
+.dark .stgrd .stgc{background:#1e1e1e;border-color:#2a2a2a}
+.dark .stgch{border-bottom-color:#222}
+.dark .strw{border-bottom-color:#222}.dark .strw:hover{color:#60a5fa}
+/* Squads */
+.dark .squad-card{background:#1e1e1e;border-color:#2a2a2a}
+
+.dark .squad-team-card{background:#1e1e1e;border-color:#2a2a2a}
+.dark .squad-team-hdr{background:#1a1a1a;border-bottom-color:#2a2a2a}
+.dark .squad-team-hdr:hover{background:#222}
+.dark .squad-pl:not(:last-child){border-bottom-color:#222}
+.dark .spl-yedek{color:#555}
+/* Vote */
+.dark .vote-grp-hdr{border-bottom-color:#2a2a2a}
+.dark .vote-card{background:#1e1e1e;border-color:#2a2a2a}
+/* vote-submit dark rules consolidated in polish block below */
+/* Annex */
+.dark .annex-panel{background:#1e1e1e;border-color:#2a2a2a}
+.dark .annex-item{background:#1a1a1a}
+/* Modals */
+.dark .modal{background:#1e1e1e}
+.dark .mhdr{background:#1e1e1e;border-bottom-color:#2a2a2a}
+.dark .xb:hover{color:#f0f0ee}
+.dark .mhero{border-bottom-color:#2a2a2a}
+.dark .xic{background:#1a1a1a;border-color:#2a2a2a}
+.dark .xir{border-bottom-color:#222}
+.dark .ev{border-bottom-color:#222}
+/* Onboarding */
+.dark .ob-modal{background:#1e1e1e}
+.dark .ob-hdr{border-bottom-color:#2a2a2a}
+.dark .ob-sub{color:#777}
+.dark .ob-search{border-bottom-color:#222}
+.dark .ob-search-inp{background:#1a1a1a;border-color:#333;color:#f0f0ee}
+.dark .ob-search-inp:focus{border-color:#f0f0ee;background:#111}
+.dark .ob-grp{background:#1a1a1a;border-color:#222;color:#666}
+.dark .ob-row{border-bottom-color:#1e1e1e}
+.dark .ob-row:hover{background:#222}
+.dark .ob-row.sel{background:#1c1500;border-left-color:#f59e0b}
+.dark .ob-footer{border-top-color:#2a2a2a}
+.dark .ob-rand{background:#1e1e1e;border-color:#333;color:#999}
+.dark .ob-rand:hover{background:#2a2a2a}
+.dark .ob-ok{background:#2a2a2a;color:#666}
+.dark .ob-ok.ready{background:#f0f0ee;color:#111}
+.dark .ob-ok.ready:hover{background:#ccc}
+.dark .ob-skip{background:#1e1e1e;border-color:#333;color:#777}
+.dark .ob-skip:hover{background:#2a2a2a;color:#f0f0ee}
+.dark .ob-badge{background:#1e1e1e;border-color:#333}
+.dark .ob-badge:hover{background:#252525}
+/* Upset slider */
+.dark .upset-ctrl{background:#1a1a1a;border-color:#2a2a2a}
+.dark .upset-ctrl input[type=range]{accent-color:#f0f0ee}
+/* Note + misc */
+.dark .note{background:#1a1a1a;color:#666}
+.dark .nor{color:#666}
+/* Highlights in dark mode — moved to polish block below */
+/* Dark mode theme toggle button */
+#themeToggle{background:none;border:1px solid #ddd;border-radius:8px;padding:5px 8px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:#888;transition:background .15s,border-color .15s}
+#themeToggle:hover{background:#f0f0ee;border-color:#bbb}
+.dark #themeToggle{border-color:#333;color:#999}
+.dark #themeToggle:hover{background:#252525;border-color:#555}
+/* ── Go Back button (light + dark) ─── */
+.back-btn{display:none;align-items:center;gap:5px;font-size:13px;padding:5px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#1a1a1a;font-family:inherit;transition:background .15s}
+.back-btn:hover{background:#f0f0ee}
+.dark .back-btn{background:#1e1e1e !important;color:#aaa !important;border-color:#333 !important}
+.dark .back-btn:hover{background:#2a2a2a !important}
+/* ── Simulate button (dark mode — cyan) ─── */
+.dark .btn.pr{background:#0891b2;color:#fff;border-color:#0e7490}
+.dark .btn.pr:hover{background:#0e7490;border-color:#155e75}
+/* ── Highlight rows — force light text ─── */
+.dark .hl-row{background:#0d2030 !important;outline-color:#00c4ff;color:#e0f4ff !important}
+.dark .hl-row td{font-weight:600 !important;color:#e0f4ff !important}
+.dark .hl-gr{background:#0d2030 !important;outline-color:#00c4ff;color:#e0f4ff !important}
+.dark .hl-mc{background:#0d2030 !important;border-color:#00c4ff !important}
+.dark .hl-bm{background:#0d2030 !important;border-color:#00c4ff !important}
+.dark .hl-bt{font-weight:700;color:#7dd3fc !important}
+/* ── Fixture — make loser text legible ─── */
+.dark .mta.L,.dark .mtb.L{color:#777}
+/* ── Squads star player — readable amber text ─── */
+.dark .squad-star{border-color:#92400e;background:#1c1500;color:#fbbf24}
+/* ── Championship Summary box ─── */
+.champ-sum-box{background:#fff;border:1px solid #e5e5e0;border-radius:11px;padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:background .15s}
+.champ-sum-box:hover{background:#fafaf8}
+.dark .champ-sum-box{background:#1a1a1a;border-color:#2a2a2a;color:#f0f0ee}
+.dark .champ-sum-box:hover{background:#222}
+.champ-sum-title{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.dark .champ-sum-title{color:#f0f0ee}
+.champ-sum-opps{font-size:12px;color:#555;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.dark .champ-sum-opps{color:#999}
+.champ-sum-lbl{font-size:11px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
+.champ-chip{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;border:1px solid #e5e5e0;transition:background .15s,border-color .15s;cursor:pointer}
+.champ-chip:hover{background:#ebf3ff;border-color:#93c5fd}
+.dark .champ-chip{border-color:#333}
+.dark .champ-chip:hover{background:#0d2030;border-color:#0e7490}
+/* ── Vote reset button ─── */
+.vote-reset{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#888;font-family:inherit;transition:background .15s}
+.vote-reset:hover{background:#f0f0ee}
+.dark .vote-reset{background:#1e1e1e;border-color:#333;color:#777}
+.dark .vote-reset:hover{background:#2a2a2a}
+/* ── Vote submit button (dark — dark cyan) ─── */
+.dark .vote-submit{background:#0e7490;color:#fff;border-color:#164e63}
+.dark .vote-submit:hover{background:#0891b2}
+.dark .vote-submitted{background:#0d2018;border-color:#166534;color:#4ade80}
