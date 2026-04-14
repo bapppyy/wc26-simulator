@@ -117,11 +117,11 @@ export function buildFullReportModal(s, idx) {
   for (const m of allMs) {
     const wA = m.w === m.a;
     const sub = m.pen ? " pen." + m.penA + "-" + m.penB : m.et ? " ET" : "";
-    html += `<div onclick="openReportMatch(${idx},'${m.a}','${m.b}')" style="display:grid;grid-template-columns:48px 1fr 52px 1fr;gap:5px;align-items:center;padding:6px 10px;background:#f8f8f6;border-radius:7px;cursor:pointer;font-size:12px;margin-bottom:2px">`
+    html += `<div onclick="openReportMatch(${idx},'${m.a}','${m.b}')" class="report-row">`
       + `<span style="font-size:10px;color:#aaa;font-weight:600">${m.round}</span>`
-      + `<div style="font-weight:${wA ? 700 : 400};color:${wA ? "#1a1a1a" : "#bbb"}">${flag(m.a)}${tTeam(m.a)}</div>`
+      + `<div class="${wA ? 'report-winner' : 'report-loser'}">${flag(m.a)}${tTeam(m.a)}</div>`
       + `<div style="text-align:center;font-weight:700">${m.sa}–${m.sb}<span style="font-size:9px;color:#aaa;font-weight:400">${sub}</span></div>`
-      + `<div style="text-align:right;font-weight:${!wA ? 700 : 400};color:${!wA ? "#1a1a1a" : "#bbb"}">${tTeam(m.b)}${flag(m.b)}</div></div>`;
+      + `<div class="${!wA ? 'report-winner' : 'report-loser'}" style="text-align:right">${tTeam(m.b)}${flag(m.b)}</div></div>`;
   }
   html += `</div>`;
   document.getElementById("modalTitle").textContent = `📋 Sim #${idx} — Select Match`;

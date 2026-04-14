@@ -21,6 +21,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .gr{display:grid;grid-template-columns:14px 1fr 26px 26px 26px 34px;gap:2px;align-items:center;padding:6px 10px;border-bottom:1px solid #f5f5f3;font-size:12px;cursor:pointer}
 .gr:last-of-type{border-bottom:none}.gr:hover{background:#fafaf8}
 .gr.q1{background:#f0fdf4}.gr.q2{background:#f7fef9}.gr.q3{background:#fffbeb}
+/* Zebra striping for fixture list group cards */
+.fs-even .mc{background:#e4e8f0 !important;border-color:#cdd3de !important}
 .gn{font-size:10px;color:#aaa;text-align:center}.num{text-align:center;color:#888;font-size:11px}.num.b{font-weight:700;color:#1a1a1a}
 .gtm{display:flex;align-items:center;gap:4px;min-width:0}.gtm span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gpwr{font-size:10px;color:#888;padding:5px 10px 6px;border-top:1px solid #f5f5f3;display:flex;gap:10px}
@@ -259,6 +261,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dark .gch2{border-bottom-color:#222}
 .dark .gr{border-bottom-color:#222}.dark .gr:hover{background:#252525}
 .dark .gr.q1{background:#0d2018}.dark .gr.q2{background:#0d1e14}.dark .gr.q3{background:#1e1a08}
+/* Dark mode zebra striping for fixture */
+.dark .fs-even .mc{background:#1a2030 !important;border-color:#2a3040 !important}
 .dark .num.b{color:#f0f0ee}
 .dark .gpwr{border-top-color:#222}
 /* Fixture */
@@ -376,9 +380,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .back-btn:hover{background:#f0f0ee}
 .dark .back-btn{background:#1e1e1e !important;color:#aaa !important;border-color:#333 !important}
 .dark .back-btn:hover{background:#2a2a2a !important}
-/* ── Simulate button (dark mode — cyan) ─── */
-.dark .btn.pr{background:#0891b2;color:#fff;border-color:#0e7490}
-.dark .btn.pr:hover{background:#0e7490;border-color:#155e75}
+/* ── Simulate button (dark mode — homepage cyan) ─── */
+.dark .btn.pr{background:#00d4ff !important;color:#001823 !important;border-color:#00b8e6 !important}
+.dark .btn.pr:hover{background:#00b8e6 !important;border-color:#0099cc !important}
 /* ── Highlight rows — force light text ─── */
 .dark .hl-row{background:#0d2030 !important;outline-color:#00c4ff;color:#f0f0ee !important}
 .dark .hl-row td{font-weight:600 !important;color:#f0f0ee !important}
@@ -386,13 +390,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dark .hl-mc{background:#0d2030 !important;border-color:#00c4ff !important;color:#f0f0ee !important}
 .dark .hl-bm{background:#0d2030 !important;border-color:#00c4ff !important;color:#f0f0ee !important}
 .dark .hl-bt{font-weight:700;color:#f0f0ee !important}
-/* ── Fixture — make team names and scores legible ─── */
-.dark .mc{color:#e5e5e5 !important}
-.dark .mta,.dark .mtb{color:#e5e5e5 !important}
-.dark .mta.L,.dark .mtb.L{color:#e5e5e5 !important}
-.dark .scb{color:#e5e5e5 !important}
-/* ── Squads star player — readable amber text ─── */
-.dark .squad-star{border-color:#92400e;background:#1c1500;color:#fbbf24 !important}
+/* ── Selected team name in header badge ─── */
+html.dark body #obBadgeName{color:#f0f0ee !important}
+/* ── Overview row & group highlights ─── */
+html.dark body .hl-row *,html.dark body .hl-gr *{color:#f0f0ee !important}
+/* ── Squad stars ─── */
+html.dark body .squad-star{background:#27272a !important;color:#fbbf24 !important}
+html.dark body .squad-star *{color:#fbbf24 !important}
+/* ── Fixture list text (W/L & loser text) ─── */
+html.dark body .mc,html.dark body .mc *{color:#e5e5e5 !important}
+html.dark body .mta.L,html.dark body .mtb.L{color:#e5e5e5 !important}
+/* ── Fixture — override inline background (fixture.js sets card.style.background) ─── */
+.dark .mc{background:#1e1e1e !important;border-color:#2a2a2a !important}
+.dark .mc:hover{background:#252525 !important}
+/* ── Squad cards — explicit color overrides ─── */
+.dark .squad-ovr{color:#f0f0ee}
+.dark .squad-star{border-color:#92400e !important;background:#27272a !important}
+/* ── Squad player list — star row children ─── */
+html.dark body .spl-star{background:#1e1e1e !important;border-left:3px solid #fbbf24 !important}
+html.dark body .spl-star .spl-name,html.dark body .spl-star .spl-ovr,html.dark body .spl-star .spl-pos{color:#fbbf24 !important}
+/* ── Monte highlighted card — override JS inline bg ─── */
+html.dark body .mci[style*="background"]{background:#07364d !important;border-color:#00c4ff !important}
+html.dark body .mci[style*="background"] .mcn,html.dark body .mci[style*="background"] .mcp,html.dark body .mci[style*="background"] .mcs{color:#f0f0ee !important}
 /* ── Championship Summary box ─── */
 .champ-sum-box{background:#fff;border:1px solid #e5e5e0;border-radius:11px;padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:background .15s}
 .champ-sum-box:hover{background:#fafaf8}
@@ -412,7 +431,92 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .vote-reset:hover{background:#f0f0ee}
 .dark .vote-reset{background:#1e1e1e;border-color:#333;color:#777}
 .dark .vote-reset:hover{background:#2a2a2a}
-/* ── Vote submit button (dark — dark cyan) ─── */
-.dark .vote-submit{background:#0e7490;color:#fff;border-color:#164e63}
-.dark .vote-submit:hover{background:#0891b2}
+/* ── Vote submit button (dark — homepage cyan) ─── */
+.dark .vote-submit{background:#00d4ff !important;color:#001823 !important;border-color:#00b8e6 !important}
+.dark .vote-submit:hover{background:#00b8e6 !important}
 .dark .vote-submitted{background:#0d2018;border-color:#166534;color:#4ade80}
+/* ── Modal inner elements — dark-mode safe ─────────── */
+.modal-scroll{max-height:220px;overflow-y:auto;border:1px solid #e5e5e0;border-radius:10px;background:#fff}
+.modal-scroll-lg{max-height:320px;overflow-y:auto;border:1px solid #e5e5e0;border-radius:10px;background:#fff}
+.modal-row{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .15s}
+.modal-row:not(:last-child){border-bottom:1px solid #f5f5f3}
+.modal-row:hover{background:#f8f8f6}
+.stat-box{background:#f8f8f6;border-radius:10px;padding:12px;text-align:center}
+.modal-heading{font-size:12px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:.06em;border-top:1px solid #f0f0ee;padding-top:14px;margin-bottom:8px}
+.modal-summary{font-size:13px;color:#555}
+.modal-back-btn{font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#555;font-family:inherit;flex-shrink:0;transition:background .15s}
+.modal-back-btn:hover{background:#f0f0ee}
+.report-row{display:grid;grid-template-columns:48px 1fr 52px 1fr;gap:5px;align-items:center;padding:6px 10px;background:#f8f8f6;border-radius:7px;cursor:pointer;font-size:12px;margin-bottom:2px;transition:background .15s}
+.report-row:hover{background:#efefed}
+.report-winner{font-weight:700;color:#1a1a1a}
+.report-loser{font-weight:400;color:#bbb}
+.win-bar-track{display:flex;gap:3px;height:8px;border-radius:4px;overflow:hidden;background:#f0f0ee}
+.dark .modal-scroll,.dark .modal-scroll-lg{background:#1a1a1a !important;border-color:#2a2a2a !important}
+.dark .modal-row:not(:last-child){border-bottom-color:#222}
+.dark .modal-row:hover{background:#252525}
+.dark .stat-box{background:#1e1e1e}
+.dark .modal-heading{color:#888;border-top-color:#2a2a2a}
+.dark .modal-summary{color:#aaa}
+.dark .modal-back-btn{background:#1e1e1e;border-color:#333;color:#aaa}
+.dark .modal-back-btn:hover{background:#2a2a2a}
+.dark .report-row{background:#1e1e1e}
+.dark .report-row:hover{background:#252525}
+.dark .report-winner{color:#f0f0ee}
+.dark .report-loser{color:#555}
+.dark .win-bar-track{background:#2a2a2a}
+/* ── Group Probabilities ─────────────────────────── */
+.grp-prob-toggle{font-size:11px;color:#0891b2;cursor:pointer;display:flex;align-items:center;gap:4px;padding:5px 12px;border-top:1px solid #f5f5f3;background:none;border-left:none;border-right:none;border-bottom:none;width:100%;font-family:inherit;text-align:left;transition:background .15s}
+.grp-prob-toggle:hover{background:#f0f9ff}
+.grp-prob-panel{display:none;padding:6px 8px 8px}
+.grp-prob-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.grp-prob-tbl th{padding:3px 5px;font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.04em;text-align:right;border-bottom:1px solid #f0f0ee}
+.grp-prob-tbl th:first-child{text-align:left}
+.grp-prob-tbl td{padding:3px 5px;border-bottom:1px solid #f9f9f9;text-align:right;color:#888;font-size:11px}
+.grp-prob-tbl td:first-child{text-align:left;font-weight:500;color:#1a1a1a}
+.grp-prob-tbl tr:last-child td{border-bottom:none}
+.grp-prob-r32{color:#0891b2;font-weight:700}
+.dark .grp-prob-toggle{color:#00c4ff;border-top-color:#222}
+.dark .grp-prob-toggle:hover{background:#0d1e2e}
+.dark .grp-prob-tbl th{color:#555;border-bottom-color:#222}
+.dark .grp-prob-tbl td{color:#888;border-bottom-color:#1e1e1e}
+.dark .grp-prob-tbl td:first-child{color:#f0f0ee}
+.dark .grp-prob-r32{color:#00c4ff}
+/* ── Sim Browser detail — dark mode fixture containers & rows ─── */
+html.dark body #browserDetail div[style*="background:#fff"]{background:#1e1e1e !important;border-color:#2a2a2a !important}
+html.dark body #browserDetail .dmatch{color:#e5e5e5 !important;border-bottom-color:#252525 !important}
+html.dark body #browserDetail .dmatch div[style*="color:#1a1a1a"]{color:#f0f0ee !important}
+html.dark body #browserDetail .dmatch div[style*="color:#bbb"]{color:#555 !important}
+html.dark body #browserDetail div[style*="border-bottom:1px solid #f5f5f3"]{border-bottom-color:#252525 !important;color:#e5e5e5 !important}
+/* ── Symmetrical Bracket ─────────────────────────── */
+.bkt-tree{display:flex;align-items:stretch;overflow-x:auto;padding:0 0 12px}
+.bkt-wing{display:flex;align-items:stretch}
+.bkt-wing-l{flex-direction:row}
+.bkt-wing-r{flex-direction:row-reverse !important}
+.bkt-col-wrap{display:flex;flex-direction:column;min-width:110px;flex-shrink:0}
+.bkt-rnd-lbl{font-size:9px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;padding:5px 6px;border-bottom:1px solid #e5e5e0;text-align:center;white-space:nowrap;background:#f8f8f6}
+.bkt-col-inner{flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:4px 5px;min-height:420px}
+.bkt-match{background:#fff;border:1px solid #e5e5e0;border-radius:7px;padding:5px 7px;cursor:pointer;margin:2px 0}
+.bkt-match:hover{background:#fafaf8}
+.bkt-team{display:flex;align-items:center;gap:3px;font-size:11px;padding:2px 0;line-height:1.3}
+.bkt-team.W{font-weight:700}
+.bkt-team.L{color:#bbb}
+.bkt-sc{margin-left:auto;font-weight:700;font-size:12px;flex-shrink:0;padding-left:3px}
+.bkt-sub{font-size:9px;color:#aaa;margin-top:1px}
+.bkt-spine{display:flex;flex-direction:column;align-items:center;width:160px;min-width:160px;max-width:160px;flex-shrink:0;padding:0 6px;justify-content:center;gap:6px}
+.bkt-final-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bkt-final-match{width:100%}
+.bkt-champ{text-align:center;padding:8px 10px;background:#fffbeb;border:1px solid #fbbf24;border-radius:10px;width:100%;overflow:hidden}
+.bkt-champ-name{font-size:12px;font-weight:700;margin-top:4px;color:#1a1a1a;word-break:break-word;overflow-wrap:break-word}
+.bkt-champ-lbl{font-size:10px;color:#888;margin-top:2px}
+.bkt-3rd-wrap{width:100%;border-top:1px solid #e5e5e0;padding-top:8px}
+.bkt-3rd-lbl{font-size:9px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;text-align:center;margin-bottom:4px}
+.bkt-placeholder{background:#f8f8f6;border:1px dashed #e5e5e0;min-height:44px;cursor:default;border-radius:7px}
+.dark .bkt-rnd-lbl{color:#555;border-bottom-color:#2a2a2a;background:#1a1a1a}
+.dark .bkt-match{background:#1e1e1e;border-color:#2a2a2a}
+.dark .bkt-match:hover{background:#252525}
+.dark .bkt-team.L{color:#555}
+.dark .bkt-placeholder{background:#1a1a1a;border-color:#333}
+.dark .bkt-champ{background:#1c1500;border-color:#92400e}
+.dark .bkt-champ-name{color:#fbbf24}
+.dark .bkt-champ-lbl{color:#666}
+.dark .bkt-3rd-wrap{border-top-color:#2a2a2a}

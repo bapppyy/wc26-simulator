@@ -277,7 +277,22 @@ export function showJourney() {
           `${flag(opp)}<span style="font-weight:600">${opp}</span>` +
           `<span style="color:#9b74ff;font-weight:700;margin-left:2px">(${d.wins})</span>`;
         const _opp = opp; const _d = d;
-        chip.onclick = e => { e.stopPropagation(); openOppModal(name, _opp, 'Final', _d, n); };
+        // Directly open the match report modal (same as previous KO round opponents)
+        chip.onclick = e => {
+          e.stopPropagation();
+          // Find the first championship sim where this team beat _opp in the Final
+          const champSim = state.SIMS.find(s => {
+            if (s.champion !== name) return false;
+            const fin = s.fin && s.fin[0];
+            return fin && (fin.a === _opp || fin.b === _opp);
+          });
+          if (champSim && champSim.fin && champSim.fin[0]) {
+            const fin = champSim.fin[0];
+            openMatchFromOppModal(champSim.idx, fin.a, fin.b, 'Final');
+          } else {
+            openOppModal(name, _opp, 'Final', _d, n);
+          }
+        };
         oppLine.appendChild(chip);
       }
       box.appendChild(oppLine);
@@ -323,7 +338,7 @@ function openChampModal(team, vsOpp = null) {
 
   // Summary count line
   const summary = document.createElement('div');
-  summary.style.cssText = 'font-size:13px;color:#555';
+  summary.className = 'modal-summary';
   summary.innerHTML =
     `<b>${champSims.length}</b> ${d['champ.sims'] || 'championship simulation(s)'}` +
     (vsOpp ? ` ${d['champ.against'] || 'against'} ${flag(vsOpp)} <b>${vsOpp}</b>` : '');
@@ -336,8 +351,7 @@ function openChampModal(team, vsOpp = null) {
     wrapper.appendChild(note);
   } else {
     const scroll = document.createElement('div');
-    scroll.style.cssText =
-      'max-height:320px;overflow-y:auto;border:1px solid #e5e5e0;border-radius:10px;background:#fff';
+    scroll.className = 'modal-scroll-lg';
 
     champSims.forEach((s, i) => {
       const fin = s.fin && s.fin[0];
@@ -346,11 +360,7 @@ function openChampModal(team, vsOpp = null) {
       const oScore  = fin ? (fin.a === team ? fin.sb : fin.sa) : '';
 
       const row = document.createElement('div');
-      row.style.cssText =
-        'display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;transition:background .15s;' +
-        (i < champSims.length - 1 ? 'border-bottom:1px solid #f5f5f3' : '');
-      row.onmouseenter = () => { row.style.background = '#f8f8f6'; };
-      row.onmouseleave = () => { row.style.background = ''; };
+      row.className = 'modal-row';
 
       const simNum = document.createElement('span');
       simNum.style.cssText = 'font-size:11px;color:#aaa;min-width:52px;flex-shrink:0';
@@ -423,7 +433,7 @@ function openOppModal(team, opp, round, data, n) {
     `<span style="color:#9b74ff">${team} ${winPct}%</span>` +
     `<span style="color:#f59e0b">${opp} ${lossPct}%</span>` +
     `</div>` +
-    `<div style="display:flex;gap:3px;height:8px;border-radius:4px;overflow:hidden;background:#f0f0ee">` +
+    `<div class="win-bar-track">` +
     `<div style="flex:${data.wins};background:#9b74ff"></div>` +
     `<div style="flex:${data.enc - data.wins};background:#f59e0b"></div>` +
     `</div>` +
@@ -445,7 +455,7 @@ function openOppModal(team, opp, round, data, n) {
   const section = document.getElementById('_oppMatchSection');
 
   const heading = document.createElement('div');
-  heading.style.cssText = 'font-size:12px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:.06em;border-top:1px solid #f0f0ee;padding-top:14px;margin-bottom:8px';
+  heading.className = 'modal-heading';
   heading.textContent = 'Individual Results';
   section.appendChild(heading);
 
@@ -481,8 +491,7 @@ function openOppModal(team, opp, round, data, n) {
       section.appendChild(note);
     } else {
       const scroll = document.createElement('div');
-      scroll.style.cssText =
-        'max-height:220px;overflow-y:auto;border:1px solid #e5e5e0;border-radius:10px;background:#fff';
+      scroll.className = 'modal-scroll';
 
       matches.forEach(({ s, m }, idx) => {
         // Engine-native order: m.a m.sa – m.sb m.b  (always matches the match report)
@@ -502,11 +511,7 @@ function openOppModal(team, opp, round, data, n) {
             : { text: 'D', bg: '#f0f0ee', color: '#666' };
 
         const row = document.createElement('div');
-        row.style.cssText =
-          'display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .15s;' +
-          (idx < matches.length - 1 ? 'border-bottom:1px solid #f5f5f3' : '');
-        row.onmouseenter = () => { row.style.background = '#f8f8f6'; };
-        row.onmouseleave = () => { row.style.background = ''; };
+        row.className = 'modal-row';
 
         const simNum = document.createElement('span');
         simNum.style.cssText = 'font-size:11px;color:#aaa;min-width:46px;flex-shrink:0';
@@ -598,13 +603,8 @@ function openMatchFromOppModal(simIdx, nameA, nameB, rndLabel) {
 
     // Build the back button
     const backBtn = document.createElement('button');
+    backBtn.className = 'modal-back-btn';
     backBtn.textContent = '← Results';
-    backBtn.style.cssText =
-      'font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #ddd;' +
-      'background:#fff;cursor:pointer;color:#555;font-family:inherit;flex-shrink:0;' +
-      'transition:background .15s';
-    backBtn.onmouseenter = () => { backBtn.style.background = '#f0f0ee'; };
-    backBtn.onmouseleave = () => { backBtn.style.background = '#fff'; };
     backBtn.onclick = () => {
       // Re-open the opp aggregate modal using the saved args
       if (_oppModalArgs) {
@@ -630,7 +630,7 @@ function openMatchFromOppModal(simIdx, nameA, nameB, rndLabel) {
 }
 
 function statBox(label, value, color) {
-  return `<div style="background:#f8f8f6;border-radius:10px;padding:12px;text-align:center">` +
+  return `<div class="stat-box">` +
     `<div style="font-size:18px;font-weight:800;color:${color}">${value}</div>` +
     `<div style="font-size:11px;color:#aaa;margin-top:3px">${label}</div>` +
     `</div>`;
