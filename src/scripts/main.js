@@ -9,12 +9,13 @@
 // ── Engine / data ────────────────────────────────────────────────────────────
 import { simTournament, setUpex, setRunSeed, flag } from '../lib/engine.js';
 import { DATA } from '../lib/data.js';
+import { analytics } from '../lib/analytics.js';
 
 // ── State ────────────────────────────────────────────────────────────────────
 import { state } from './state.js';
 
 // ── Navigation ───────────────────────────────────────────────────────────────
-import { nav, navBack } from './nav.js';
+import { nav } from './nav.js';
 
 // ── UI panels ────────────────────────────────────────────────────────────────
 import { drawMonte, drawStageTable, srtS } from './ui/monte.js';
@@ -25,12 +26,14 @@ import {
   buildFilterSels, applyFilter, filterByMatchup,
   renderList, showDetail, closeDetail,
   openSimById, filterAndGo, openRecordMatch,
+  switchDetailTab,
 } from './ui/browser.js';
 import { buildJourneySel, goJourney, showJourney } from './ui/journey.js';
 import { buildPowerTable, srtP, updateRating, resetRatings } from './ui/power.js';
-import { drawSquads }  from './ui/squads.js';
-import { drawVote }    from './ui/vote.js';
-import { drawStats }   from './ui/stats.js';
+import { drawSquads }    from './ui/squads.js';
+import { drawVote }      from './ui/vote.js';
+import { drawStats }     from './ui/stats.js';
+import { drawAnalytics } from './ui/analytics.js';
 
 // ── Modals ───────────────────────────────────────────────────────────────────
 import {
@@ -60,6 +63,7 @@ function runAll() {
     const newSeed = (Date.now() & 0xFFFFFF) ^ (Math.random() * 0xFFFFFF | 0);
     setRunSeed(newSeed);
 
+    analytics.reset();
     state.SIMS = []; state.STATS = null; state.LAST = null;
     state.filtered = []; state.page = 0; state._muf = null;
     state.stageSortK = 'champ'; state.stageSortD = -1;
@@ -67,7 +71,7 @@ function runAll() {
 
     // Clear all UI panels
     ['cbanner','mcGrid','stageBody','groupsEl','fixtureEl','bracketEl','annexPanel',
-     'simList','pagination','journeyEl','statsEl','pwBody'].forEach(id => {
+     'simList','pagination','journeyEl','statsEl','pwBody','analyticsEl'].forEach(id => {
       const el = document.getElementById(id); if (el) el.innerHTML = '';
     });
     const bDet = document.getElementById('browserDetail');
@@ -100,6 +104,7 @@ function runAll() {
     for (let i = 0; i < n; i++) {
       const isLast = (i === n - 1);
       const s = simTournament(i + 1, isLast);
+      analytics.trackSim(s);
       state.SIMS.push(s);
       if (isLast) state.LAST = s;
       champCount[s.champion] = (champCount[s.champion] || 0) + 1;
@@ -218,7 +223,7 @@ function clearSavedSim() {
   state.filtered = []; state.page = 0; state._muf = null;
   state.stageSortK = 'champ'; state.stageSortD = -1;
   ['cbanner','mcGrid','stageBody','groupsEl','fixtureEl','bracketEl','annexPanel',
-   'simList','pagination','journeyEl','statsEl','pwBody'].forEach(id => {
+   'simList','pagination','journeyEl','statsEl','pwBody','analyticsEl'].forEach(id => {
     const el = document.getElementById(id); if (el) el.innerHTML = '';
   });
   const bDet = document.getElementById('browserDetail');
@@ -227,6 +232,10 @@ function clearSavedSim() {
   if (bMain) bMain.style.display = 'block';
   const info = document.getElementById('info');
   if (info) info.textContent = '';
+  // Re-show empty state and pulse when sim is cleared
+  const runBtn = document.getElementById('runBtn');
+  if (runBtn) runBtn.classList.add('btn-pulse');
+  _showEmptyState();
   buildPowerTable();
 }
 
@@ -252,6 +261,7 @@ function refreshPanels() {
   drawFixture();
   drawBracket();
   drawStats();
+  drawAnalytics();
   buildPowerTable();
   showJourney();
   setTimeout(obHighlight, 60);
@@ -271,10 +281,14 @@ function buildUI() {
   drawSquads();
   drawVote();
   drawStats();
+  drawAnalytics();
   applyFilter();
   showJourney();
   // Re-apply team highlight if one is selected
   setTimeout(obHighlight, 60);
+  // Remove pulse once a sim has run
+  const runBtn = document.getElementById('runBtn');
+  if (runBtn) runBtn.classList.remove('btn-pulse');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -288,7 +302,6 @@ Object.assign(window, {
 
   // Navigation
   nav,
-  navBack,
 
   // Panel-specific helpers called from inline handlers
   srtS,          // Monte stage table sort
@@ -300,9 +313,21 @@ Object.assign(window, {
   applyFilter,   // Browser panel filter dropdowns
   filterByMatchup, // Journey → browser matchup filter
   filterAndGo,   // Stats → browser champion filter
-  closeDetail,   // Browser detail back button
-  openSimById,   // Open a single sim by index
-  openRecordMatch, // Stats records → match detail
+  closeDetail,      // Browser detail back button
+  openSimById,      // Open a single sim by index
+  openRecordMatch,  // Stats records → match detail
+  switchDetailTab,  // Browser detail List/Bracket tab toggle
+
+  // Copy a ?sim=N permalink to the clipboard
+  copySimLink: (idx) => {
+    const url = `${location.origin}${location.pathname}?sim=${idx}`;
+    const restore = (btn) => setTimeout(() => { if (btn) btn.textContent = '🔗 Copy Link'; }, 1800);
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.getElementById('copyLinkBtn');
+      if (btn) btn.textContent = '✓ Copied!';
+      restore(btn);
+    }).catch(() => prompt('Copy this link:', url));
+  },
 
   // Modals
   openMatchModal,
@@ -317,6 +342,13 @@ Object.assign(window, {
   obClose,
   obBuild,
 
+  // Analytics aggregator getters
+  getTopMatchups:   (limit) => analytics.getTopMatchups(limit),
+  get3rdPlaceStats: ()      => analytics.get3rdPlaceStats(),
+  getDreamFinals:   (limit) => analytics.getDreamFinals(limit),
+  getPenKings:      (limit) => analytics.getPenKings(limit),
+  getGroupDepth:    ()      => analytics.getGroupDepth(),
+
   // State persistence
   clearSavedSim,
 
@@ -328,6 +360,8 @@ Object.assign(window, {
 
   // Stats page (triggered by tab click via nav)
   drawStats,
+  // Analytics page (triggered by tab click via nav)
+  drawAnalytics,
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -347,5 +381,21 @@ window.addEventListener('DOMContentLoaded', () => {
     buildUI();
     const info = document.getElementById('info');
     if (info) info.textContent = (state.STATS?.n || 0) + ' sim · restored';
+  } else {
+    // No previous sim — pulse the button and show empty state
+    const runBtn = document.getElementById('runBtn');
+    if (runBtn) runBtn.classList.add('btn-pulse');
+    _showEmptyState();
   }
 });
+
+function _showEmptyState() {
+  const el = document.getElementById('cbanner');
+  if (!el) return;
+  el.innerHTML =
+    `<div class="empty-state">` +
+    `<div class="empty-state-icon">⚽</div>` +
+    `<div class="empty-state-title">Ready to simulate</div>` +
+    `<div class="empty-state-sub">Select your team above and click <strong>Simulate</strong> to generate thousands of parallel universes.</div>` +
+    `</div>`;
+}

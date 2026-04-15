@@ -11,6 +11,7 @@ function _d() {
 
 export function closeModal() {
   document.getElementById("modal").style.display = "none";
+  document.body.style.overflow = '';
 }
 
 export function openMatchModal(m, rnd, simIdx) {
@@ -21,15 +22,20 @@ export function openMatchModal(m, rnd, simIdx) {
   document.getElementById("modalTitle").textContent =
     `${m.a} ${m.sa}–${m.sb} ${m.b}${sub ? " · " + sub : ""}`;
 
-  const _evG = {}, _evA = {};
+  const _evG = {}, _evA = {}, _evY = {}, _evR = {};
   for (const ev of (m.events || [])) {
     if (ev.type === "goal") {
       _evG[ev.scorer] = (_evG[ev.scorer] || 0) + 1;
       if (ev.assister) _evA[ev.assister] = (_evA[ev.assister] || 0) + 1;
+    } else if (ev.type === "yellow") {
+      _evY[ev.player] = (_evY[ev.player] || 0) + 1;
+    } else if (ev.type === "red") {
+      _evR[ev.player] = (_evR[ev.player] || 0) + 1;
     }
   }
-  const _xiA = (m.xiA || []).map(p => ({ ...p, goals: _evG[p.n] || 0, assists: _evA[p.n] || 0 }));
-  const _xiB = (m.xiB || []).map(p => ({ ...p, goals: _evG[p.n] || 0, assists: _evA[p.n] || 0 }));
+  const _augment = p => ({ ...p, goals: _evG[p.n] || 0, assists: _evA[p.n] || 0, yellows: _evY[p.n] || 0, reds: _evR[p.n] || 0 });
+  const _xiA = (m.xiA || []).map(_augment);
+  const _xiB = (m.xiB || []).map(_augment);
 
   function xiHtml(xi, tname) {
     if (!xi || !xi.length)
@@ -39,10 +45,13 @@ export function openMatchModal(m, rnd, simIdx) {
     for (const [posCode, cat] of posOrder) {
       const players = xi.filter(p => p.p === posCode || p._cat === cat);
       for (const p of players) {
-        const g = (p.goals || 0) > 0 ? `<span class="pstat-g">⚽${p.goals || 0}</span>` : "";
-        const a = (p.assists || 0) > 0 ? `<span class="pstat-a">A${p.assists || 0}</span>` : "";
+        const yc = (p.yellows || 0) > 0 ? `<span class="pstat-y">${'🟨'.repeat(p.yellows)}</span>` : "";
+        const rc = (p.reds || 0) > 0 ? `<span class="pstat-r">${'🟥'.repeat(p.reds)}</span>` : "";
+        const g  = (p.goals || 0) > 0 ? `<span class="pstat-g">${'⚽'.repeat(p.goals)}</span>` : "";
+        const a  = (p.assists || 0) > 0 ? `<span class="pstat-a">${'👟'.repeat(p.assists)}</span>` : "";
         const star = p.r === 0 ? `<span class="xistar">★</span>` : "";
-        rows += `<div class="xir"><span class="xip">${cat}</span>${star}<span class="xin">${p.n}</span>${g}${a}<span class="xiovr">${p.o}</span></div>`;
+        // Layout: [Pos] [★] [Name—flex:1] [🟨/🟥] [⚽⚽] [👟] [OVR]
+        rows += `<div class="xir"><span class="xip">${cat}</span>${star}<span class="xin">${p.n}</span>${yc}${rc}${g}${a}<span class="xiovr">${p.o}</span></div>`;
       }
     }
     return `<div class="xic"><div class="xict">${flag(tname)} ${tTeam(tname)}</div>${rows}</div>`;
@@ -88,12 +97,14 @@ export function openMatchModal(m, rnd, simIdx) {
     + `<div class="sec">Match Events (${(m.events || []).length} events)</div>`
     + `<div class="evl">${evHtml || `<div style="color:#aaa;font-size:12px;padding:8px 0">Full events are recorded for the last simulation. For older sims use Sim Browser → 📋 Report.</div>`}</div>`;
   document.getElementById("modal").style.display = "flex";
+  document.body.style.overflow = 'hidden';
 }
 
 export function openFullReport(simIdx) {
   document.getElementById("modalTitle").textContent = `📋 Sim #${simIdx} — computing...`;
   document.getElementById("modalBody").innerHTML = `<div style="padding:20px;text-align:center;color:#888"><span class="sp"></span> Re-simulating...</div>`;
   document.getElementById("modal").style.display = "flex";
+  document.body.style.overflow = 'hidden';
   setTimeout(() => {
     const detailed = rerunDetailed(simIdx);
     window._reportSim = { idx: simIdx, s: detailed };
@@ -147,6 +158,7 @@ export function openReportMatch(simIdx, nameA, nameB) {
     document.getElementById('modalBody').innerHTML =
       `<div style="padding:20px;text-align:center;color:#888"><span class="sp"></span> Loading match...</div>`;
     document.getElementById('modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
     setTimeout(() => {
       const detailed = rerunDetailed(simIdx);
       window._reportSim = { idx: simIdx, s: detailed };
@@ -172,4 +184,5 @@ export function openHow() {
     sec(d['how.s5t'], d['how.s5d']) +
     `</div>`;
   document.getElementById("modal").style.display = "flex";
+  document.body.style.overflow = 'hidden';
 }

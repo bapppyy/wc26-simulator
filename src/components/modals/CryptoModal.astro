@@ -52,11 +52,11 @@
 <script>
   function openCryptoModal() {
     const m = document.getElementById('cryptoModal');
-    if (m) m.style.display = 'flex';
+    if (m) { m.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
   }
   function closeCryptoModal() {
     const m = document.getElementById('cryptoModal');
-    if (m) m.style.display = 'none';
+    if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
   }
   function copyCryptoAddr(addrId, btnId) {
     const addr = document.getElementById(addrId)?.textContent?.trim();

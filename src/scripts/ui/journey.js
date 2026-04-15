@@ -79,7 +79,7 @@ export function showJourney() {
     `<span class="jp">Championship <b>${(champCnt / n * 100).toFixed(1)}%</b></span></div>` +
     `</div></div>`;
 
-  // Squad section
+  // Squad section — collapsible accordion, default closed
   const players = td.p || [];
   if (players.length) {
     const posLabel = p => p ? ({ 1: 'GK', 2: 'DF', 3: 'MF', 4: 'FW' })[p[0]] || '?' : '?';
@@ -90,20 +90,23 @@ export function showJourney() {
       if (pa !== pb) return pa - pb;
       return b.o - a.o;
     });
+
+    // Inline onclick survives subsequent el.innerHTML += calls (JS closures do not)
+    const sortedHtml = sorted.map(p =>
+      `<div class="squad-card ${p.r === 0 ? 'squad-star' : p.r === 1 ? 'squad-as' : 'squad-sub'}">` +
+      `<div class="squad-pos">${posLabel(p.p)}</div>` +
+      `<div class="squad-name">${p.n || ''}</div>` +
+      `<div class="squad-ovr">${p.o}${p.r === 0 ? ' ★' : ''}</div>` +
+      `</div>`
+    ).join('');
     el.innerHTML +=
-      `<div class="sec">Squad (${players.length} players)</div><div class="squad-grid">` +
-      sorted.map(p =>
-        `<div class="squad-card ${p.r === 0 ? 'squad-star' : p.r === 1 ? 'squad-as' : 'squad-sub'}">` +
-        `<div class="squad-pos">${posLabel(p.p)}</div>` +
-        `<div class="squad-name">${p.n || ''}</div>` +
-        `<div class="squad-ovr">${p.o}${p.r === 0 ? ' ★' : ''}</div>` +
-        `</div>`
-      ).join('') +
-      `</div>`;
+      `<div class="sec acc-toggle" style="cursor:pointer" onclick="this.nextElementSibling.classList.toggle('acc-closed');this.querySelector('.acc-arrow').classList.toggle('closed',this.nextElementSibling.classList.contains('acc-closed'))">` +
+      `Squad (${players.length} players)<span class="acc-arrow closed" style="float:right;font-style:normal">▾</span></div>` +
+      `<div class="squad-grid acc-closed">${sortedHtml}</div>`;
   }
 
-  // Group matches
-  el.innerHTML += `<div class="sec">Group ${td.g} Matches — ${n} sim. averages</div>`;
+  // Group matches — collapsible accordion, default open; inline onclick survives innerHTML +=
+  let _grpCards = '';
   for (const fx of (FIXTURES[td.g] || []).filter(f => f[0] === name || f[1] === name)) {
     const opp = fx[0] === name ? fx[1] : fx[0];
     const key = [fx[0], fx[1]].sort().join('|');
@@ -115,10 +118,8 @@ export function showJourney() {
     const myW = (iA ? ms.winsA : ms.winsB) / cnt;
     const opW = (iA ? ms.winsB : ms.winsA) / cnt;
     const dr  = ms.draws / cnt;
-
-    const card = document.createElement('div');
-    card.className = 'jfxc';
-    card.innerHTML =
+    _grpCards +=
+      `<div class="jfxc">` +
       `<div class="jfxm"><b>${fx[2]}</b><span>·</span><span>${fx[3]}</span><span>·</span><span>Group ${td.g}</span></div>` +
       `<div class="jfxb"><div style="font-size:13px;font-weight:600">${flag(name)} ${tTeam(name)}</div>` +
       `<div class="jfxs"><div class="jfxsb">${myG.toFixed(1)}–${opG.toFixed(1)}</div><div style="font-size:10px;color:#aaa">avg. score</div></div>` +
@@ -133,12 +134,15 @@ export function showJourney() {
       `<div class="jfxs2"><div class="jfxsl">Exp. Points</div><div class="jfxsv">${(myW * 3 + dr).toFixed(2)}</div></div>` +
       `<div class="jfxs2"><div class="jfxsl">Goals (avg.)</div><div class="jfxsv">${myG.toFixed(2)}</div></div>` +
       `<div class="jfxs2"><div class="jfxsl">Total (avg.)</div><div class="jfxsv">${(myG + opG).toFixed(2)}</div></div>` +
-      `</div>`;
-    el.appendChild(card);
+      `</div></div>`;
   }
+  el.innerHTML +=
+    `<div class="sec acc-toggle" style="cursor:pointer" onclick="this.nextElementSibling.classList.toggle('acc-closed');this.querySelector('.acc-arrow').classList.toggle('closed',this.nextElementSibling.classList.contains('acc-closed'))">` +
+    `Group ${td.g} Matches — ${n} sim. averages<span class="acc-arrow" style="float:right">▾</span></div>` +
+    `<div class="fs-body">${_grpCards}</div>`;
 
   // KO stages
-  el.innerHTML += `<div class="sec">Knockout Rounds — click a stage to expand · click an opponent to view match stats</div>`;
+  el.innerHTML += `<div class="sec">Knockout Rounds</div>`;
   const RL = { R32: 'R32', R16: 'R16', QF: 'Quarter-Final', SF: 'Semi-Final', Final: 'Final' };
   const reachFrom = {
     R32: ['R32','R16','QF','SF','Final','Champion','3.Yer'],
@@ -166,14 +170,13 @@ export function showJourney() {
     const maxEnc   = allOpps[0] ? allOpps[0][1].enc : 1;
 
     const wrap = document.createElement('div'); wrap.className = 'stgw';
-    const hdr  = document.createElement('div'); hdr.className = 'stgh';
+    const hdr  = document.createElement('div'); hdr.className = 'stgh acc-toggle';
     hdr.innerHTML =
       `<div><div class="slbl">${label}</div><div class="spct">${reachP}%</div>` +
       `<div class="scnd">Reaching: ${reachP}% · Advancing: ${passP}%</div>` +
       `</div><div><div class="sbg"><div class="sbf" style="width:${reachP}%"></div></div></div>` +
-      // FIX 2 — Localization: 'rakip' → 'opponents'
-      `<div class="scnt">${allOpps.length > 0 ? allOpps.length + ' opponents' : ''}</div>` +
-      `<div class="ea">${allOpps.length > 0 ? '▸' : ''}</div>`;
+      `<div class="scnt">${allOpps.length > 0 ? allOpps.length + ' opp.' : ''}</div>` +
+      `<div class="ea acc-arrow${allOpps.length > 0 ? ' closed' : ''}">${allOpps.length > 0 ? '▾' : ''}</div>`;
 
     const body = document.createElement('div'); body.className = 'stgb';
     body.style.display = 'none'; // collapsed by default
@@ -222,11 +225,10 @@ export function showJourney() {
 
     let open = false;
     if (allOpps.length > 0) {
-      hdr.style.cursor = 'pointer';
       hdr.onclick = () => {
         open = !open;
         body.style.display = open ? 'block' : 'none';
-        hdr.querySelector('.ea').style.transform = open ? 'rotate(90deg)' : '';
+        hdr.querySelector('.ea').classList.toggle('closed', !open);
       };
     }
     wrap.appendChild(hdr);
@@ -301,17 +303,6 @@ export function showJourney() {
     el.appendChild(box);
   }
 
-  // ── Patreon support link at bottom of Journey view ──────────────────────────
-  const patronDiv = document.createElement('div');
-  patronDiv.style.cssText =
-    'margin-top:24px;padding:12px 16px;border:1px dashed #e0e0e0;border-radius:10px;' +
-    'text-align:center;font-size:11px;color:#aaa';
-  patronDiv.innerHTML =
-    `Enjoying the simulator? ` +
-    `<a href="https://www.patreon.com/c/BapLab" target="_blank" rel="noopener noreferrer" ` +
-    `style="color:#00c4ff;font-weight:600;text-decoration:none">Support BapLab on Patreon</a> ` +
-    `to fuel the next generation of simulations.`;
-  el.appendChild(patronDiv);
 }
 
 // ── Championship sim-list modal ────────────────────────────────────────────────
@@ -393,6 +384,7 @@ function openChampModal(team, vsOpp = null) {
 
   body.appendChild(wrapper);
   document.getElementById('modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
 // ── Opponent head-to-head modal ───────────────────────────────────────────────
@@ -556,6 +548,7 @@ function openOppModal(team, opp, round, data, n) {
   }
 
   document.getElementById('modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
 

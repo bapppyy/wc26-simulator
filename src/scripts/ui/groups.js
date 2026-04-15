@@ -7,7 +7,7 @@ import { flag, simTournament } from '../../lib/engine.js';
 import { DATA } from '../../lib/data.js';
 import { GKEYS } from '../../lib/constants.js';
 import { state } from '../state.js';
-import { tTeam } from '../../lib/i18n.js';
+import { tTeam, t } from '../../lib/i18n.js';
 
 // ── Dynamic probability calculation ──────────────────────────────────────────
 // Returns { teamName: { p1, p2, p3, p4, r32 } } for teams in the given group.
@@ -102,12 +102,12 @@ function calcGroupProbs(groupKey, teamNames) {
 export function drawGroups() {
   const { LAST } = state;
   const el = document.getElementById('groupsEl');
-  el.innerHTML = '<div class="note">ℹ Last simulation · Click team → journey · Yellow = 3rd qualifying for R32</div>';
+  el.innerHTML = `<div class="note">${t('groups.note')}</div>`;
 
   const wrap = document.createElement('div');
   wrap.className = 'gg';
 
-  const top8grps = new Set(LAST.top8.map(t => t.grp));
+  const top8grps = new Set(LAST.top8.map(x => x.grp));
 
   for (const gk of GKEYS) {
     const st = LAST.grpSt[gk];
@@ -116,34 +116,58 @@ export function drawGroups() {
     const c = document.createElement('div');
     c.className = 'gc';
 
-    // ── Header ──────────────────────────────────────────────────────────────
-    c.innerHTML =
-      `<div class="gch"><span>Group ${gk}</span><span>${st.map(x => flag(x.name)).join('')}</span></div>` +
-      `<div class="gch2"><span></span><span>Team</span><span>GF</span><span>GA</span><span>GD</span><span>P</span></div>`;
+    // ── Header (click to collapse/expand body) ───────────────────────────────
+    const gchEl = document.createElement('div');
+    gchEl.className = 'gch acc-toggle';
+    gchEl.innerHTML =
+      `<span>${t('round.group')} ${gk}</span>` +
+      `<span style="display:flex;align-items:center;gap:4px">${st.map(x => flag(x.name)).join('')}<span class="acc-arrow">▾</span></span>`;
+    c.appendChild(gchEl);
 
-    // ── Standings rows ───────────────────────────────────────────────────────
+    // Column header (not collapsible)
+    const gch2El = document.createElement('div');
+    gch2El.className = 'gch2';
+    gch2El.innerHTML = '<span></span><span>Team</span><span>GF</span><span>GA</span><span>GD</span><span>P</span>';
+    c.appendChild(gch2El);
+
+    // ── Collapsible body: standings rows + power footer ───────────────────────
+    const gcBody = document.createElement('div');
+    gcBody.className = 'gc-body';
+
+    // Standings rows
+    let stanHtml = '';
     st.forEach((t, i) => {
       const cls = i === 0 ? 'q1' : i === 1 ? 'q2' : (i === 2 && top8grps.has(gk)) ? 'q3' : '';
       const gd = t.gf - t.ga;
-      c.innerHTML +=
+      stanHtml +=
         `<div class="gr ${cls}" onclick="goJourney('${t.name}')"><span class="gn">${i + 1}</span>` +
         `<div class="gtm"><span>${flag(t.name)}</span><span data-team="${t.name}">${tTeam(t.name)}</span></div>` +
         `<span class="num">${t.gf}</span><span class="num">${t.ga}</span>` +
         `<span class="num">${gd > 0 ? '+' : ''}${gd}</span><span class="num b">${t.pts}</span></div>`;
     });
 
-    // ── Power averages footer ─────────────────────────────────────────────
+    // Power averages footer
     const td = st.map(x => DATA[x.name]).filter(Boolean);
-    c.innerHTML +=
+    stanHtml +=
       `<div class="gpwr">` +
       `<span>DF:${(td.reduce((s, t) => s + t.df, 0) / td.length).toFixed(1)}</span>` +
       `<span>MF:${(td.reduce((s, t) => s + t.mf, 0) / td.length).toFixed(1)}</span>` +
       `<span>FW:${(td.reduce((s, t) => s + t.fw, 0) / td.length).toFixed(1)}</span></div>`;
+    gcBody.innerHTML = stanHtml;
+
+    // Wire header toggle
+    const gcArrow = gchEl.querySelector('.acc-arrow');
+    gchEl.onclick = () => {
+      const nowClosed = gcBody.classList.toggle('acc-closed');
+      if (gcArrow) gcArrow.classList.toggle('closed', nowClosed);
+    };
+
+    c.appendChild(gcBody);
 
     // ── Probability toggle ────────────────────────────────────────────────
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'grp-prob-toggle';
-    toggleBtn.innerHTML = '<span>📊</span><span>Group Probabilities</span><span style="margin-left:auto">▸</span>';
+    toggleBtn.innerHTML = `<span>📊</span><span>${t('grp.probBtn')}</span><span style="margin-left:auto">▸</span>`;
 
     const probPanel = document.createElement('div');
     probPanel.className = 'grp-prob-panel';
@@ -157,7 +181,7 @@ export function drawGroups() {
       probLoaded = true;
 
       // Show a loading indicator briefly
-      probPanel.innerHTML = '<div style="font-size:11px;color:#aaa;padding:6px 8px">Calculating…</div>';
+      probPanel.innerHTML = `<div style="font-size:11px;color:#aaa;padding:6px 8px">${t('grp.calculating')}</div>`;
 
       // Use setTimeout so the loading message renders before the sync calc
       setTimeout(() => {
@@ -167,13 +191,13 @@ export function drawGroups() {
         let tblHtml =
           `<table class="grp-prob-tbl">` +
           `<thead><tr>` +
-          `<th style="text-align:left">🏳</th><th>1st</th><th>2nd</th><th>3rd</th><th class="grp-prob-r32">R32</th>` +
+          `<th style="text-align:left">🏳</th><th>1st</th><th>2nd</th><th>3rd</th><th>4th</th>` +
           `</tr></thead><tbody>`;
 
-        // Sort by R32 probability descending for readability
+        // Sort by 1st-place probability descending (strongest team first)
         const sorted = teamNames
           .map(nm => ({ nm, d: probs[nm] }))
-          .sort((a, b) => (b.d?.r32 ?? 0) - (a.d?.r32 ?? 0));
+          .sort((a, b) => (b.d?.p1 ?? 0) - (a.d?.p1 ?? 0));
 
         for (const { nm, d } of sorted) {
           if (!d) continue;
@@ -183,7 +207,7 @@ export function drawGroups() {
             `<td>${d.p1.toFixed(1)}%</td>` +
             `<td>${d.p2.toFixed(1)}%</td>` +
             `<td>${d.p3.toFixed(1)}%</td>` +
-            `<td class="grp-prob-r32">${d.r32.toFixed(1)}%</td>` +
+            `<td style="color:#e87c5d">${d.p4.toFixed(1)}%</td>` +
             `</tr>`;
         }
         tblHtml += `</tbody></table>`;

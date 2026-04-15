@@ -37,21 +37,22 @@ export const STAGE_TAG = {
 
 // ── Navigation — maps tab key → pane element ID ────────────────────────────
 export const PMAP = {
-  monte:   "pMonte",
-  groups:  "pGroups",
-  journey: "pJourney",
-  fixture: "pFixture",
-  bracket: "pBracket",
-  browser: "pBrowser",
-  power:   "pPower",
-  squads:  "pSquads",
-  vote:    "pVote",
+  monte:     "pMonte",
+  groups:    "pGroups",
+  journey:   "pJourney",
+  fixture:   "pFixture",
+  bracket:   "pBracket",
+  browser:   "pBrowser",
+  power:     "pPower",
+  squads:    "pSquads",
+  vote:      "pVote",
+  analytics: "pAnalytics",
 };
 
 // Ordered list of navigation keys (matches tab order in the UI)
 export const NKEYS = [
   "monte", "groups", "journey", "fixture",
-  "bracket", "browser", "power", "squads", "vote",
+  "bracket", "browser", "power", "squads", "analytics",
 ];
 
 // ── Group keys — all 12 WC 2026 groups in order ────────────────────────────

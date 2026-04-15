@@ -6,6 +6,11 @@ import { STAGE_LABELS, STAGE_TAG } from '../../lib/constants.js';
 import { state, scoreStr } from '../state.js';
 import { openMatchModal, buildFullReportModal, openFullReport, openReportMatch } from './modals.js';
 import { tTeam } from '../../lib/i18n.js';
+import { renderBracketTree } from './bracket.js';
+
+// ── Module-level state for the detail view ────────────────────────────────────
+let _currentDetailSim  = null;
+let _currentDetailTeam = null;
 
 export function buildFilterSels() {
   const sel = document.getElementById('fTeam');
@@ -82,9 +87,8 @@ export function renderList() {
       `<div class="sn">#${s.idx}</div>` +
       `<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px">${flag(s.champion)}${s.champion} 🏆${mu}</div>` +
       `<div style="font-size:11px;color:#aaa;margin-top:2px">Final: ${s.fin[0] ? s.fin[0].a + ' ' + scoreStr(s.fin[0]) + ' ' + s.fin[0].b : ''}</div></div>` +
-      `<div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">` +
+      `<div style="margin-left:auto;display:flex;align-items:center;flex-shrink:0">` +
       `<span class="stg ${tagCls}">${tagLbl}</span>` +
-      `<button class="btn" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();openFullReport(${s.idx})">📋 Report</button>` +
       `</div>`;
 
     const _s = s;
@@ -120,18 +124,87 @@ function renderPg() {
   }
 }
 
+// ── Detail view ───────────────────────────────────────────────────────────────
+
 export function showDetail(s, focusTeam) {
+  _currentDetailSim  = s;
+  _currentDetailTeam = focusTeam || null;
+
   document.getElementById('browserMain').style.display = 'none';
   const det = document.getElementById('browserDetail');
   det.style.display = 'block';
 
-  let html =
+  // Build chrome: back + copy link + title + tabs + content container
+  det.innerHTML =
     `<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">` +
-    `<div class="dback" onclick="closeDetail()">← Back</div></div>` +
+    `<div class="dback" onclick="closeDetail()">← Back</div>` +
+    `<button class="btn" id="copyLinkBtn" style="font-size:11px;padding:3px 9px;margin-left:auto" onclick="copySimLink(${s.idx})">🔗 Copy Link</button>` +
+    `</div>` +
     `<div style="font-size:17px;font-weight:700;margin-bottom:2px">Sim #${s.idx} — ${flag(s.champion)} ${s.champion} 🏆</div>` +
     (focusTeam
-      ? `<div style="font-size:12px;color:#888;margin-bottom:14px">${flag(focusTeam)}${focusTeam}: ${STAGE_LABELS[s.reached[focusTeam]] || ''}</div>`
-      : `<div style='margin-bottom:14px'></div>`);
+      ? `<div style="font-size:12px;color:#888;margin-bottom:10px">${flag(focusTeam)}${focusTeam}: ${STAGE_LABELS[s.reached[focusTeam]] || ''}</div>`
+      : `<div style="margin-bottom:10px"></div>`) +
+    `<div style="display:flex;gap:4px;margin-bottom:14px">` +
+    `<button class="det-tab det-tab-active" id="tabList"    onclick="switchDetailTab('list')">📋 List View</button>` +
+    `<button class="det-tab"                id="tabBracket" onclick="switchDetailTab('bracket')">🏆 Bracket View</button>` +
+    `</div>` +
+    `<div id="detailContent"></div>`;
+
+  _renderListContent(s, focusTeam);
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// ── Tab switcher ──────────────────────────────────────────────────────────────
+// Exported so main.js can wire it onto window.
+
+export function switchDetailTab(tab) {
+  const s = _currentDetailSim;
+  if (!s) return;
+
+  const tabList    = document.getElementById('tabList');
+  const tabBracket = document.getElementById('tabBracket');
+  if (tabList)    tabList.classList.toggle('det-tab-active',    tab === 'list');
+  if (tabBracket) tabBracket.classList.toggle('det-tab-active', tab === 'bracket');
+
+  const content = document.getElementById('detailContent');
+  if (!content) return;
+
+  if (tab === 'bracket') {
+    content.innerHTML = '';
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'overflow-x:auto;margin-top:4px';
+    wrapper.appendChild(renderBracketTree(s));
+    content.appendChild(wrapper);
+  } else {
+    _renderListContent(s, _currentDetailTeam);
+  }
+}
+
+// ── List content renderer ─────────────────────────────────────────────────────
+
+function _renderListContent(s, focusTeam) {
+  const content = document.getElementById('detailContent');
+  if (!content) return;
+
+  function rdRows(ms, lbl) {
+    if (!ms || !ms.length) return '';
+    const bodyId = `bdet-rd-${s.idx}-${lbl.replace(/\s+/g, '-')}`;
+    let h = `<div class="sec acc-toggle" style="cursor:pointer" onclick="(function(h,id){const b=document.getElementById(id);b.classList.toggle('acc-closed');h.querySelector('.acc-arrow').classList.toggle('closed',b.classList.contains('acc-closed'))})(this,'${bodyId}')">` +
+      `${lbl}<span class="acc-arrow" style="float:right">▾</span></div>` +
+      `<div id="${bodyId}" class="fs-body" style="background:#fff;border:1px solid #e5e5e0;border-radius:10px;overflow:hidden;margin-bottom:8px">`;
+    for (const m of ms) {
+      if (!m) continue;
+      const wA = m.w === m.a;
+      const sub = m.pen ? ' pen.' + m.penA + '-' + m.penB : m.et ? ' ET' : '';
+      h += `<div class="dmatch" onclick="openReportMatch(${s.idx},'${m.a}','${m.b}')" style="cursor:pointer">` +
+        `<div style="font-weight:${wA ? 700 : 400};color:${wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.a ? " style='color:#9b74ff;font-weight:700'" : ''}>${flag(m.a)}&nbsp;${m.a}</div>` +
+        `<div style="text-align:center;font-weight:700;font-size:13px">${m.sa}–${m.sb}<span style="font-size:10px;color:#aaa;font-weight:400">${sub}</span></div>` +
+        `<div style="text-align:right;font-weight:${!wA ? 700 : 400};color:${!wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.b ? " style='color:#9b74ff;font-weight:700'" : ''}>${m.b}&nbsp;${flag(m.b)}</div></div>`;
+    }
+    return h + `</div>`;
+  }
+
+  let html = '';
 
   // Group standings
   html += `<div class="sec">Group Results</div><div class="gg" style="margin-bottom:14px">`;
@@ -148,33 +221,37 @@ export function showDetail(s, focusTeam) {
   }
   html += `</div>`;
 
-  function rdRows(ms, lbl) {
-    if (!ms || !ms.length) return '';
-    let h = `<div class="sec">${lbl}</div><div style="background:#fff;border:1px solid #e5e5e0;border-radius:10px;overflow:hidden;margin-bottom:8px">`;
-    for (const m of ms) {
-      if (!m) continue;
-      const wA = m.w === m.a;
-      const sub = m.pen ? ' pen.' + m.penA + '-' + m.penB : m.et ? ' ET' : '';
-      h += `<div class="dmatch" onclick="openReportMatch(${s.idx},'${m.a}','${m.b}')" style="cursor:pointer">` +
-        `<div style="font-weight:${wA ? 700 : 400};color:${wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.a ? " style='color:#9b74ff;font-weight:700'" : ''}>${flag(m.a)}${m.a}</div>` +
-        `<div style="text-align:center;font-weight:700;font-size:13px">${m.sa}–${m.sb}<span style="font-size:10px;color:#aaa;font-weight:400">${sub}</span></div>` +
-        `<div style="text-align:right;font-weight:${!wA ? 700 : 400};color:${!wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.b ? " style='color:#9b74ff;font-weight:700'" : ''}>${m.b}${flag(m.b)}</div></div>`;
-    }
-    return h + `</div>`;
-  }
-
-  // Group matches
-  html += `<div class="sec">Group Matches</div><div style="background:#fff;border:1px solid #e5e5e0;border-radius:10px;overflow:hidden;margin-bottom:8px">`;
-  for (const [gk, ms] of Object.entries(s.grpMatches)) {
+  // Group matches — collapsible per group, compact single-line cards
+  // Main header is itself clickable to batch-toggle all groups
+  html += `<div class="sec acc-toggle" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="(function(h,idx){` +
+    `var allBodies=document.querySelectorAll('[id^=\\'bdet-gm-'+idx+'-\\']');` +
+    `var allClosed=Array.from(allBodies).every(function(b){return b.classList.contains('acc-closed');});` +
+    `allBodies.forEach(function(b){if(allClosed)b.classList.remove('acc-closed');else b.classList.add('acc-closed');});` +
+    `var arrows=document.querySelectorAll('[data-gm-arrow=\\''+idx+'\\']');` +
+    `arrows.forEach(function(a){a.classList.toggle('closed',!allClosed);});` +
+    `h.querySelector('.acc-arrow').classList.toggle('closed',!allClosed);` +
+  `})(this,${s.idx})">` +
+  `<span>Group Matches</span><span class="acc-arrow">▾</span></div>`;
+  for (const gk of ['A','B','C','D','E','F','G','H','I','J','K','L']) {
+    const ms = s.grpMatches[gk];
+    if (!ms || !ms.length) continue;
+    const bodyId = `bdet-gm-${s.idx}-${gk}`;
+    html += `<div style="margin-bottom:3px">` +
+      `<div class="rl acc-toggle" style="font-size:11px;padding:4px 10px" onclick="(function(h,id){const b=document.getElementById(id);b.classList.toggle('acc-closed');h.querySelector('.acc-arrow').classList.toggle('closed',b.classList.contains('acc-closed'))})(this,'${bodyId}')">` +
+      `<span>Group ${gk}</span><span class="acc-arrow" data-gm-arrow="${s.idx}">▾</span></div>` +
+      `<div id="${bodyId}" class="fs-body" style="background:#fff;border:1px solid #e5e5e0;border-radius:0 0 8px 8px;overflow:hidden">`;
     for (const m of ms) {
       const wA = m.sa > m.sb;
-      html += `<div class="dmatch" onclick="openReportMatch(${s.idx},'${m.a}','${m.b}')" style="cursor:pointer"><span style="font-size:10px;color:#aaa">G${gk}</span>` +
-        `<div style="font-weight:${wA ? 700 : 400};color:${wA ? '#1a1a1a' : '#bbb'}"${focusTeam === m.a ? " style='color:#9b74ff;font-weight:700'" : ''}>${flag(m.a)}${m.a}</div>` +
-        `<div style="text-align:center;font-weight:700">${m.sa}–${m.sb}</div>` +
-        `<div style="text-align:right;font-weight:${!wA && m.sa !== m.sb ? 700 : 400};color:${!wA && m.sa !== m.sb ? '#1a1a1a' : '#bbb'}"${focusTeam === m.b ? " style='color:#9b74ff;font-weight:700'" : ''}>${m.b}${flag(m.b)}</div></div>`;
+      const hiA = focusTeam === m.a ? 'color:#9b74ff;font-weight:700' : `font-weight:${wA ? 700 : 400};color:${wA ? '#1a1a1a' : '#bbb'}`;
+      const hiB = focusTeam === m.b ? 'color:#9b74ff;font-weight:700' : `font-weight:${!wA && m.sa !== m.sb ? 700 : 400};color:${!wA && m.sa !== m.sb ? '#1a1a1a' : '#bbb'}`;
+      html += `<div class="dmatch" onclick="openReportMatch(${s.idx},'${m.a}','${m.b}')" style="cursor:pointer">` +
+        `<div style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;${hiA}">${flag(m.a)}&nbsp;${m.a}</div>` +
+        `<div style="text-align:center;font-weight:700;white-space:nowrap">${m.sa}–${m.sb}</div>` +
+        `<div style="text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;${hiB}">${m.b}&nbsp;${flag(m.b)}</div></div>`;
     }
+    html += `</div></div>`;
   }
-  html += `</div>`;
+
   html += rdRows(s.r32, 'R32') + rdRows(s.r16, 'R16') + rdRows(s.qf, 'QF') + rdRows(s.sf, 'Semi-Final');
   if (s.third) html += rdRows([s.third], '3rd Place');
   html += rdRows(s.fin, 'Final');
@@ -190,8 +267,11 @@ export function showDetail(s, focusTeam) {
     );
     html += `</div>`;
   }
-  det.innerHTML = html;
+
+  content.innerHTML = html;
 }
+
+// ── Navigation helpers ────────────────────────────────────────────────────────
 
 export function closeDetail() {
   document.getElementById('browserDetail').style.display = 'none';
@@ -207,6 +287,8 @@ export function openSimById(idx) {
   document.getElementById('fCount').innerHTML = `<b>1</b> sims — #${idx}`;
   renderList();
   window.nav('browser');
+  closeDetail();
+  showDetail(s, '');
 }
 
 export function filterAndGo(name) {
